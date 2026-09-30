@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  cliente
+  administrador
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole
+  createdAt    DateTime @default(now())
+  orders       Order[]
+}
+
+enum LeadSource {
+  contacto
+  profesional
+}
+
+enum LeadStatus {
+  nuevo
+  contactado
+  convertido
+  descartado
+}
+
+model Lead {
+  id           String     @id @default(uuid()) @db.Uuid
+  source       LeadSource
+  name         String
+  email        String
+  businessType String?
+  message      String?
+  locale       String
+  status       LeadStatus @default(nuevo)
+  createdAt    DateTime   @default(now())
+
+  @@index([createdAt])
+}
+
+enum OrderStatus {
+  pendiente
+  confirmado
+  enviado
+  entregado
+  cancelado
+}
+
+model Order {
+  id     String      @id @default(uuid()) @db.Uuid
+  // Correlativo visible para el cliente y el admin (CE-0001), distinto del uuid.
+  number Int         @unique @default(autoincrement())
+  userId String      @db.Uuid
+  user   User        @relation(fields: [userId], references: [id])
+  status OrderStatus @default(pendiente)
+
+  // Snapshot de contacto y entrega al momento del pedido: no debe cambiar si
+  // el cliente edita su cuenta después.
+  fullName     String
+  phone        String
+  email        String
+  businessName String?
+  department   String
+  city         String
+  address      String
+  notes        String?
+  locale       String
+
+  total     Decimal     @db.Decimal(10, 2)
+  adminNote String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  items     OrderItem[]
+
+  @@index([userId])
+  @@index([status, createdAt])
+  @@index([createdAt])
+}
+
+// Precio y nombre congelados: el catálogo vive en src/content/products.ts y
+// puede cambiar sin tocar pedidos ya hechos.
+model OrderItem {
+  id          String  @id @default(uuid()) @db.Uuid
+  orderId     String  @db.Uuid
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productSlug String
+  productName String
+  sku         String
+  dozens      Int
+  dozenPrice  Decimal @db.Decimal(10, 2)
+
+  @@index([orderId])
+}

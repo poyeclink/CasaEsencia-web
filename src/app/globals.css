@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+/* Paleta tomada del sitio y empaque originales: azul marino del logo, crema del
+   fondo, dorado del monograma y verde bosque del Ease Comb / sellos de cera. */
+:root {
+  --radius: 0.375rem;
+
+  --background: #fbf8ee;
+  --foreground: #153247;
+
+  --card: #ffffff;
+  --card-foreground: #153247;
+
+  --primary: #153247;
+  --primary-foreground: #f7f2db;
+
+  --secondary: #f3edd3;
+  --secondary-foreground: #153247;
+
+  --muted: #f1ecdb;
+  --muted-foreground: #5d6b75;
+
+  /* accent: dorado oscuro legible sobre crema (texto pequeño AA);
+     gold: dorado claro del monograma, para usar sobre fondos oscuros. */
+  --accent: #7d6e33;
+  --accent-foreground: #fbf8ee;
+  --gold: #c5b96e;
+
+  --forest: #2f4c41;
+  --forest-foreground: #f7f2db;
+
+  --sage: #d5d8d0;
+
+  --border: #e4ddc4;
+  --input: #d9d1b4;
+  --ring: #c5b96e;
+
+  --destructive: #b42318;
+  --destructive-foreground: #fef3f2;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-gold: var(--gold);
+
+  --color-forest: var(--forest);
+  --color-forest-foreground: var(--forest-foreground);
+
+  --color-sage: var(--sage);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 6px);
+
+  --font-sans: var(--font-nunito);
+  --font-serif: var(--font-playfair);
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-fade-up: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+}
+
+/* Fuera de @theme: solo se usa vía animate-[sheet-in...] y Tailwind descarta
+   los keyframes de @theme que ninguna variable --animate-* referencia. */
+@keyframes sheet-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--primary);
+}
+
+@layer components {
+  .eyebrow {
+    @apply text-[0.7rem] font-semibold tracking-[0.32em] uppercase text-accent;
+  }
+
+  .display {
+    @apply font-serif font-normal tracking-tight text-balance;
+  }
+
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
