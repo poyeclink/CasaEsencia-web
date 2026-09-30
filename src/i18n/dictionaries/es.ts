@@ -395,6 +395,13 @@ const es = {
       passwordRequired: "Ingresa tu contraseña.",
     },
   },
+  pwa: {
+    installTitle: "Instala Casa Escencia",
+    installText: "Añádela a tu pantalla de inicio para pedir más rápido y seguir tus pedidos.",
+    install: "Instalar",
+    dismiss: "Ahora no",
+    iosText: "En Safari toca Compartir y luego «Añadir a pantalla de inicio».",
+  },
   footer: {
     tagline:
       "En Casa Escencia entendemos que cuando se trata de crear objetos para tu rutina diaria, el detalle, la calma y la calidad lo son todo.",

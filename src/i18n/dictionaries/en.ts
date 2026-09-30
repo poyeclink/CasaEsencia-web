@@ -388,6 +388,13 @@ const en: Dictionary = {
       passwordRequired: "Enter your password.",
     },
   },
+  pwa: {
+    installTitle: "Install Casa Escencia",
+    installText: "Add it to your home screen to order faster and follow your orders.",
+    install: "Install",
+    dismiss: "Not now",
+    iosText: "In Safari tap Share, then “Add to Home Screen”.",
+  },
   footer: {
     tagline:
       "At Casa Escencia we understand that when it comes to creating objects for your daily routine, detail, calm and quality are everything.",

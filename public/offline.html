@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#153247" />
+    <title>Sin conexión · Casa Escencia</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background: #fbf8ee;
+        color: #153247;
+        font-family: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+        text-align: center;
+      }
+      main { max-width: 26rem; }
+      img { width: 9rem; height: auto; margin-bottom: 2rem; }
+      h1 { margin: 0 0 0.75rem; font-family: "Playfair Display", Georgia, serif; font-weight: 400; font-size: 2rem; }
+      p { margin: 0 0 1.75rem; color: #5d6b75; line-height: 1.6; }
+      button {
+        height: 2.75rem;
+        padding: 0 1.75rem;
+        border: 0;
+        border-radius: 999px;
+        background: #153247;
+        color: #f7f2db;
+        font: 600 0.75rem/1 inherit;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/images/logo.svg" alt="Casa Escencia" width="193" height="97" />
+      <h1>Sin conexión</h1>
+      <p>
+        No pudimos conectarnos a Internet. Revisa tu conexión e inténtalo de nuevo; tu carrito
+        sigue guardado en este dispositivo.
+      </p>
+      <p lang="en" style="font-size: 0.875rem">
+        You're offline. Check your connection and try again — your cart is still saved on this
+        device.
+      </p>
+      <button type="button" onclick="location.reload()">Reintentar · Retry</button>
+    </main>
+  </body>
+</html>

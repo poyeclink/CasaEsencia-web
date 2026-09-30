@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "../globals.css";
 import { nunito, playfair } from "../fonts";
+
+export const viewport: Viewport = { themeColor: "#153247" };
 
 export const metadata: Metadata = {
   title: "Panel · Casa Escencia",

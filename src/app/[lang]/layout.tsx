@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import "../globals.css";
 import { nunito, playfair } from "../fonts";
@@ -10,6 +10,12 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import { PwaProvider } from "@/components/pwa/PwaProvider";
+
+export const viewport: Viewport = {
+  themeColor: "#153247",
+  viewportFit: "cover",
+};
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -24,6 +30,9 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
     metadataBase: new URL(site.url),
     title: { default: dict.meta.title, template: `%s · ${site.name}` },
     description: dict.meta.description,
+    applicationName: site.name,
+    appleWebApp: { capable: true, title: site.name, statusBarStyle: "default" },
+    formatDetection: { telephone: false },
     openGraph: {
       siteName: site.name,
       locale: lang === "es" ? "es_SV" : "en_US",
@@ -54,6 +63,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
           </main>
           <Footer locale={lang} dict={dict} />
           <CartDrawer locale={lang} t={dict.cart} />
+          <PwaProvider t={dict.pwa} />
         </CartProvider>
       </body>
     </html>
