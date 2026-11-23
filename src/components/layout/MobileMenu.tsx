@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, UserRound } from "lucide-react";
+import { Menu } from "lucide-react";
+import { buttonVariants } from "@/components/ui/Button";
 import { Sheet } from "@/components/ui/Sheet";
 import { site } from "@/content/site";
 import type { Dictionary } from "@/i18n/dictionaries/es";
@@ -37,11 +38,11 @@ export function MobileMenu({ locale, items, nav }: Props) {
         footer={
           <div className="flex flex-col gap-4 text-sm">
             <Link
-              href={`/${locale}/my-account`}
+              href={`/${locale}#cotizar`}
               onClick={() => setOpen(false)}
-              className="flex items-center gap-2"
+              className={buttonVariants({ size: "lg" })}
             >
-              <UserRound className="size-4" strokeWidth={1.5} /> {nav.account}
+              {nav.requestInfo}
             </Link>
             <a
               href={site.instagram}

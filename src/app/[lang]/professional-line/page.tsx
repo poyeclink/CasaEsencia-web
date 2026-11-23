@@ -9,14 +9,16 @@ import { Ornament } from "@/components/ui/SectionHeading";
 import { LeadForm } from "@/components/leads/LeadForm";
 import { BlogSection } from "@/components/sections/BlogSection";
 import { ReelTile } from "@/components/sections/ReelTile";
+import { VideoTile } from "@/components/sections/VideoTile";
+import { sienaVideo } from "@/content/site";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/professional-line">) {
   const { lang } = await params;
   if (!hasLocale(lang)) return {};
   const dict = await getDictionary(lang);
   return pageMetadata(lang, "/professional-line", {
-    title: dict.professional.title,
-    description: dict.professional.subtitle,
+    title: { absolute: dict.professional.metaTitle },
+    description: dict.professional.metaDescription,
     image: "/images/siena-features.webp",
   });
 }
@@ -40,8 +42,9 @@ export default async function ProfessionalPage({ params }: PageProps<"/[lang]/pr
               href="#cotizar"
               className={`${buttonVariants({ variant: "light", size: "lg" })} mt-2 w-fit`}
             >
-              {dict.common.requestQuote}
+              {dict.store.cta}
             </a>
+            <p className="text-sm text-primary-foreground/70">{dict.home.heroNote}</p>
           </div>
           <div className="relative mx-auto aspect-square w-full max-w-lg overflow-hidden rounded-xl">
             <Image
@@ -58,7 +61,7 @@ export default async function ProfessionalPage({ params }: PageProps<"/[lang]/pr
 
       <section className="container-page grid gap-10 py-24 sm:py-28 md:grid-cols-2">
         {[
-          { title: t.idealTitle, items: t.ideal },
+          { title: t.idealTitle, items: t.ideal.map((text) => ({ title: "", text })) },
           { title: t.featuresTitle, items: t.features },
         ].map((group) => (
           <div key={group.title} className="rounded-xl border border-border bg-card p-8 sm:p-10">
@@ -66,16 +69,40 @@ export default async function ProfessionalPage({ params }: PageProps<"/[lang]/pr
             <Ornament className="mt-4 mb-8 justify-start" />
             <ul className="flex flex-col gap-4">
               {group.items.map((item) => (
-                <li key={item} className="flex items-center gap-4">
+                <li key={item.text} className="flex items-center gap-4">
                   <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary text-accent">
                     <Check className="size-4" strokeWidth={1.5} />
                   </span>
-                  {item}
+                  <span>
+                    {item.title && <strong className="font-semibold">{item.title}: </strong>}
+                    {item.text}
+                  </span>
                 </li>
               ))}
             </ul>
           </div>
         ))}
+      </section>
+
+      <section className="bg-secondary/60">
+        <div className="container-page grid items-center gap-14 py-24 sm:py-28 lg:grid-cols-[0.8fr_1fr] lg:gap-24">
+          <VideoTile
+            video={sienaVideo}
+            label={`${dict.common.watchVideo}: ${t.title}`}
+            closeLabel={dict.nav.close}
+            sizes="20rem"
+            className="mx-auto max-w-xs"
+          />
+          <div className="flex flex-col gap-6">
+            <p className="eyebrow">{t.videoEyebrow}</p>
+            <h2 className="display text-4xl leading-[1.1] sm:text-5xl">{t.videoTitle}</h2>
+            <Ornament className="justify-start" />
+            <p className="max-w-lg leading-relaxed text-muted-foreground">{t.videoText}</p>
+            <a href="#cotizar" className={`${buttonVariants({ size: "lg" })} mt-2 w-fit`}>
+              {dict.store.cta}
+            </a>
+          </div>
+        </div>
       </section>
 
       <section className="overflow-hidden bg-forest text-forest-foreground">
@@ -170,7 +197,12 @@ export default async function ProfessionalPage({ params }: PageProps<"/[lang]/pr
               <p className="leading-relaxed text-muted-foreground">{t.formText}</p>
             </div>
             <div className="rounded-xl bg-card p-6 shadow-[0_30px_60px_-40px_rgb(21_50_71/0.5)] sm:p-8">
-              <LeadForm source="profesional" locale={lang} t={dict.leadForm} />
+              <LeadForm
+                source="profesional"
+                locale={lang}
+                t={{ ...dict.leadForm, success: dict.store.formSuccess }}
+                withCity
+              />
             </div>
           </div>
         </div>

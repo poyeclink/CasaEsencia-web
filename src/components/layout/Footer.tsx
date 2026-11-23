@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries/es";
+import { legalPages } from "@/content/legal";
 import { products } from "@/content/products";
 import { site } from "@/content/site";
 import { Logo } from "./Logo";
@@ -44,11 +45,6 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                 </Link>
               </li>
             ))}
-            <li>
-              <Link href={`/${locale}/my-account`} className={linkClass}>
-                {dict.nav.account}
-              </Link>
-            </li>
           </ul>
         </div>
 
@@ -57,7 +53,7 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
           <ul className="flex flex-col gap-3 text-sm">
             {products.map((product) => (
               <li key={product.slug}>
-                <Link href={`/${locale}/store/${product.slug}`} className={linkClass}>
+                <Link href={`/${locale}/wholesale/${product.slug}`} className={linkClass}>
                   {product.content[locale].name}
                 </Link>
               </li>
@@ -97,7 +93,16 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
           <p>
             © {new Date().getFullYear()} {site.name}. {t.rights}
           </p>
-          <p>El Salvador</p>
+          <p>{t.terms}</p>
+          <ul className="flex gap-4">
+            {legalPages.map((page) => (
+              <li key={page.slug}>
+                <Link href={`/${locale}/${page.slug}`} className="hover:text-primary-foreground">
+                  {page.content[locale].title}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </footer>

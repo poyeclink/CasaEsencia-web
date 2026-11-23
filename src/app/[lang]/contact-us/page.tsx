@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { hasLocale } from "@/i18n/config";
@@ -14,8 +15,8 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/contact-us
   if (!hasLocale(lang)) return {};
   const dict = await getDictionary(lang);
   return pageMetadata(lang, "/contact-us", {
-    title: dict.nav.contact,
-    description: dict.contact.text,
+    title: { absolute: dict.contact.metaTitle },
+    description: dict.contact.metaDescription,
   });
 }
 
@@ -68,7 +69,7 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
             </div>
           ))}
           <a
-            href={whatsappLink()}
+            href={whatsappLink(t.whatsappMessage)}
             target="_blank"
             rel="noopener noreferrer"
             className={`${buttonVariants({ size: "lg" })} mt-2`}
@@ -78,8 +79,27 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
         </div>
 
         <div className="rounded-xl bg-card p-6 shadow-[0_30px_60px_-40px_rgb(21_50_71/0.5)] sm:p-10">
-          <h2 className="display mb-8 text-3xl sm:text-4xl">{t.formTitle}</h2>
-          <LeadForm source="contacto" locale={lang} t={dict.leadForm} />
+          <h2 className="display text-3xl sm:text-4xl">{t.formTitle}</h2>
+          <p className="mt-3 mb-8 text-muted-foreground">{t.formText}</p>
+          <LeadForm
+            source="contacto"
+            locale={lang}
+            t={{ ...dict.leadForm, success: dict.store.formSuccess }}
+            withCity
+          />
+        </div>
+      </section>
+
+      <section className="border-y border-border bg-secondary/60">
+        <div className="container-page flex flex-col items-center gap-4 py-14 text-center">
+          <h2 className="display text-3xl">{t.beforeTitle}</h2>
+          <p className="max-w-xl text-muted-foreground">{t.beforeText}</p>
+          <Link
+            href={`/${lang}/wholesale#faq`}
+            className="text-xs font-semibold tracking-[0.18em] text-accent uppercase underline-offset-8 hover:underline"
+          >
+            {t.beforeLink} →
+          </Link>
         </div>
       </section>
 

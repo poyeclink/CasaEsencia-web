@@ -5,15 +5,23 @@ import { Play, X } from "lucide-react";
 
 type Props = {
   code: string;
+  provider?: "instagram" | "youtube";
   label: string;
   closeLabel: string;
   className?: string;
   children: React.ReactNode;
 };
 
-// Fachada: la miniatura es una imagen local y el iframe de Instagram (pesado)
-// solo se monta cuando se abre el reel.
-export function ReelTile({ code, label, closeLabel, className, children }: Props) {
+// Fachada: la miniatura es una imagen local y el iframe (Instagram o YouTube, pesados)
+// solo se monta cuando se abre el video.
+export function ReelTile({
+  code,
+  provider = "instagram",
+  label,
+  closeLabel,
+  className,
+  children,
+}: Props) {
   const ref = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
 
@@ -52,10 +60,19 @@ export function ReelTile({ code, label, closeLabel, className, children }: Props
         <div className="h-[min(80vh,720px)] overflow-hidden rounded-xl bg-card">
           {open && (
             <iframe
-              src={`https://www.instagram.com/reel/${code}/embed/`}
+              src={
+                provider === "youtube"
+                  ? `https://www.youtube-nocookie.com/embed/${code}?autoplay=1&playsinline=1&rel=0`
+                  : `https://www.instagram.com/reel/${code}/embed/`
+              }
               title={label}
               allow="autoplay; encrypted-media; picture-in-picture; web-share"
-              className="h-[calc(100%+110px)] w-full border-0"
+              // El embed de Instagram trae un pie de enlaces; se recorta saliendo del contenedor.
+              className={
+                provider === "youtube"
+                  ? "size-full border-0"
+                  : "h-[calc(100%+110px)] w-full border-0"
+              }
             />
           )}
         </div>

@@ -1,31 +1,16 @@
 import type { NextConfig } from "next";
 
-const r2Hostname = process.env.R2_PUBLIC_URL
-  ? new URL(process.env.R2_PUBLIC_URL).hostname
-  : undefined;
-
+// Exportación estática: el resultado de `pnpm build` es la carpeta out/ (HTML, CSS y JS)
+// que se sube a public_html. Sin servidor de imágenes, por eso las imágenes van sin optimizar
+// (ya están en AVIF/WebP en public/).
 const nextConfig: NextConfig = {
+  output: "export",
+  trailingSlash: true,
   images: {
-    formats: ["image/avif", "image/webp"],
-    qualities: [75],
-    remotePatterns: r2Hostname ? [{ protocol: "https", hostname: r2Hostname }] : [],
+    unoptimized: true,
   },
   experimental: {
     globalNotFound: true,
-  },
-  async headers() {
-    return [
-      {
-        // El service worker nunca debe quedar en caché del navegador/CDN: así cada
-        // despliegue lo actualiza y no se queda una versión vieja instalada.
-        source: "/sw.js",
-        headers: [
-          { key: "Content-Type", value: "application/javascript; charset=utf-8" },
-          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
-          { key: "Service-Worker-Allowed", value: "/" },
-        ],
-      },
-    ];
   },
 };
 

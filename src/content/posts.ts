@@ -1,6 +1,6 @@
 import type { Localized } from "@/i18n/config";
 
-type Block =
+export type Block =
   | { type: "p"; text: string }
   | { type: "h2"; text: string }
   | { type: "list"; items: string[] }

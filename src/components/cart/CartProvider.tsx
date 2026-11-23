@@ -1,28 +1,25 @@
 "use client";
 
 import { createContext, use, useEffect, useMemo, useState } from "react";
-import { getProduct } from "@/content/products";
+import { getProduct, MIN_ORDER_UNITS } from "@/content/products";
 
-// quantity se mide en docenas: es la única unidad de venta.
+// quantity son unidades; el pedido mínimo por producto es MIN_ORDER_UNITS.
 export type CartItem = { slug: string; quantity: number };
 
 type CartContextValue = {
   items: CartItem[];
   count: number;
-  total: number;
   loaded: boolean;
   open: boolean;
   setOpen: (open: boolean) => void;
   add: (slug: string, quantity?: number) => void;
   update: (slug: string, quantity: number) => void;
-  clear: () => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
-const STORAGE_KEY = "ce-cart-dozens";
+const STORAGE_KEY = "ce-cart-units";
 
-// El carrito vive en el navegador hasta el checkout; el pedido se guarda en DB
-// y el servidor recalcula precios desde el catálogo (order-service).
+// El carrito vive en el navegador hasta enviar la cotización por WhatsApp.
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [loaded, setLoaded] = useState(false);
@@ -48,14 +45,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     () => ({
       items,
       count: items.reduce((sum, item) => sum + item.quantity, 0),
-      total: items.reduce(
-        (sum, item) => sum + (getProduct(item.slug)?.dozenPrice ?? 0) * item.quantity,
-        0,
-      ),
       loaded,
       open,
       setOpen,
-      add: (slug, quantity = 1) => {
+      add: (slug, quantity = MIN_ORDER_UNITS) => {
         setItems((current) => {
           const existing = current.find((item) => item.slug === slug);
           if (!existing) return [...current, { slug, quantity }];
@@ -67,11 +60,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       },
       update: (slug, quantity) =>
         setItems((current) =>
-          quantity <= 0
+          quantity < MIN_ORDER_UNITS
             ? current.filter((item) => item.slug !== slug)
             : current.map((item) => (item.slug === slug ? { ...item, quantity } : item)),
         ),
-      clear: () => setItems((current) => (current.length ? [] : current)),
     }),
     [items, loaded, open],
   );

@@ -1,15 +1,16 @@
 import type { MetadataRoute } from "next";
 
-// start_url "/" pasa por el proxy, que redirige al idioma del navegador.
+// Exportación estática: la ruta se genera una vez en build; el inicio apunta directo al idioma por defecto.
+export const dynamic = "force-static";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
     name: "Casa Escencia",
     short_name: "Casa Escencia",
     description:
-      "Cepillos y peines para el cuidado del cabello. Venta por docena con envío a todo El Salvador.",
+      "Cepillos y peines para el cuidado del cabello. Venta al por mayor para salones y tiendas, con envío a todo El Salvador.",
     lang: "es",
-    start_url: "/",
+    start_url: "/es/",
     scope: "/",
     display: "standalone",
     orientation: "portrait",
@@ -24,12 +25,7 @@ export default function manifest(): MetadataRoute.Manifest {
     shortcuts: [
       {
         name: "Tienda",
-        url: "/es/store",
-        icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }],
-      },
-      {
-        name: "Mis pedidos",
-        url: "/es/my-account",
+        url: "/es/wholesale",
         icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }],
       },
     ],

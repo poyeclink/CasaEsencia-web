@@ -1,29 +1,30 @@
 import type { Localized } from "@/i18n/config";
 
-// Catálogo estático mientras no exista tabla de productos: son dos piezas y el
-// contenido cambia poco. Cuando se migre a DB, esta forma sirve de guía.
-// Los pedidos congelan nombre y precio (OrderItem), así que editar aquí no
-// altera pedidos ya hechos.
+// Para agregar un producto basta con una entrada más en `products`: la ficha
+// (/wholesale/<slug>), las tarjetas, el pie, el selector de los formularios, el
+// carrito y el sitemap la toman solos. Pasos en docs/productos.md.
 type ProductContent = {
   name: string;
   tagline: string;
   summary: string;
   description: string[];
   details: string[];
+  // Usos sugeridos para el negocio; se muestran en la tarjeta de Mayoreo.
+  ideal: string[];
   care?: string[];
 };
 
-// Casa Escencia vende solo por docena: el precio del catálogo es el de la
-// docena completa y el unitario se deriva para mostrarlo como referencia.
-export const UNITS_PER_DOZEN = 12;
+// Pedido mínimo por producto. El precio sale en la cotización, no en el sitio.
+export const MIN_ORDER_UNITS = 25;
 
 export type Product = {
   slug: string;
   sku: string;
-  dozenPrice: number;
   image: string;
   hoverImage: string;
   gallery: string[];
+  // Short de YouTube del canal; la portada es una copia local (public/images/videos).
+  video?: { youtube: string; poster: string };
   content: Localized<ProductContent>;
 };
 
@@ -31,14 +32,14 @@ export const products: Product[] = [
   {
     slug: "aura-hair-brush",
     sku: "AHB01",
-    dozenPrice: 347.88,
     image: "/images/aura-box.webp",
     hoverImage: "/images/aura-hair.webp",
     gallery: ["/images/aura-box.webp", "/images/aura-hair.webp", "/images/aura-campaign.webp"],
+    video: { youtube: "BzsyTsvrWCc", poster: "/images/videos/aura-hair-brush.webp" },
     content: {
       es: {
         name: "Aura Hair Brush",
-        tagline: "Aporta volumen y brillo",
+        tagline: "Volumen y brillo",
         summary:
           "Cepillo de madera hecho a mano con cerdas naturales que aporta volumen, brillo y suavidad al cabello. Ideal para todo tipo de cabello, desenreda con suavidad y convierte tu rutina diaria en un momento de mimo y elegancia.",
         description: [
@@ -52,11 +53,12 @@ export const products: Product[] = [
           "Realza el brillo natural",
           "Aporta volumen suave",
         ],
+        ideal: ["Servicios de terminado", "Exhibidores", "Sets de regalo"],
         care: ["Evita el contacto prolongado con agua o la luz directa del sol."],
       },
       en: {
         name: "Aura Hair Brush",
-        tagline: "Brings volume and shine",
+        tagline: "Volume and shine",
         summary:
           "A handcrafted wooden brush with natural bristles that adds volume, shine and softness to hair. Ideal for all hair types, it gently detangles and transforms your daily routine into a moment of pampering and elegance.",
         description: [
@@ -70,6 +72,7 @@ export const products: Product[] = [
           "Enhances natural shine",
           "Adds soft volume",
         ],
+        ideal: ["Finishing services", "Retail shelves", "Gift sets"],
         care: ["Avoid prolonged contact with water or direct sunlight."],
       },
     },
@@ -77,14 +80,13 @@ export const products: Product[] = [
   {
     slug: "ease-hair-comb",
     sku: "AHB02",
-    dozenPrice: 227.88,
     image: "/images/ease-box.webp",
     hoverImage: "/images/ease-closeup.webp",
     gallery: ["/images/ease-box.webp", "/images/ease-closeup.webp", "/images/ease-studio.webp"],
     content: {
       es: {
         name: "Ease Hair Comb",
-        tagline: "Desenredado sin esfuerzo y acabado suave",
+        tagline: "Desenreda sin esfuerzo",
         summary:
           "Peine ligero con cerdas flexibles que desenreda sin jalar, reduce la rotura y aporta brillo natural. Ideal para todo tipo de cabello, transforma tu rutina diaria en un cuidado suave y cómodo.",
         description: [
@@ -99,10 +101,11 @@ export const products: Product[] = [
           "Realza el brillo natural",
           "Ligero y cómodo de usar",
         ],
+        ideal: ["Área de lavado", "Desenredado", "Venta diaria"],
       },
       en: {
         name: "Ease Hair Comb",
-        tagline: "Effortless detangling & smooth finish",
+        tagline: "Effortless detangling",
         summary:
           "A lightweight comb with flexible bristles that detangles without pulling, reduces breakage and adds natural shine. Ideal for all hair types, it turns your daily routine into gentle, comfortable care.",
         description: [
@@ -117,6 +120,7 @@ export const products: Product[] = [
           "Enhances natural shine",
           "Lightweight and comfortable to use",
         ],
+        ideal: ["Washing stations", "Detangling", "Everyday retail"],
       },
     },
   },
@@ -124,8 +128,4 @@ export const products: Product[] = [
 
 export function getProduct(slug: string) {
   return products.find((product) => product.slug === slug);
-}
-
-export function unitPrice(product: Product) {
-  return product.dozenPrice / UNITS_PER_DOZEN;
 }

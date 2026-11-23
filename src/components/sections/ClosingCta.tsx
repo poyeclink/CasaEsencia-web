@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries/es";
 import { buttonVariants } from "@/components/ui/Button";
+import { whatsappLink } from "@/content/site";
 import { Ornament } from "@/components/ui/SectionHeading";
 
 export function ClosingCta({ locale, dict }: { locale: Locale; dict: Dictionary }) {
@@ -22,17 +23,19 @@ export function ClosingCta({ locale, dict }: { locale: Locale; dict: Dictionary 
         <p className="max-w-xl text-lg text-forest-foreground/80">{dict.home.closingText}</p>
         <div className="mt-4 flex flex-wrap justify-center gap-4">
           <Link
-            href={`/${locale}/store`}
+            href={`/${locale}#cotizar`}
             className={buttonVariants({ variant: "light", size: "lg" })}
           >
-            {dict.common.shopNow}
+            {dict.common.requestInfo}
           </Link>
-          <Link
-            href={`/${locale}/about`}
+          <a
+            href={whatsappLink()}
+            target="_blank"
+            rel="noopener noreferrer"
             className={buttonVariants({ variant: "outlineLight", size: "lg" })}
           >
-            {dict.home.heroSecondary}
-          </Link>
+            {dict.common.whatsappChat}
+          </a>
         </div>
       </div>
     </section>

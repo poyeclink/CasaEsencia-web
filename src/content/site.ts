@@ -8,22 +8,8 @@ export const site = {
   instagram: "https://www.instagram.com/casa.escencia",
 };
 
-export const departments = [
-  "Ahuachapán",
-  "Cabañas",
-  "Chalatenango",
-  "Cuscatlán",
-  "La Libertad",
-  "La Paz",
-  "La Unión",
-  "Morazán",
-  "San Miguel",
-  "San Salvador",
-  "San Vicente",
-  "Santa Ana",
-  "Sonsonate",
-  "Usulután",
-] as const;
+// Short de la línea profesional (Siena), que no es una ficha del catálogo.
+export const sienaVideo = { youtube: "Yrn0nHUS3qE", poster: "/images/videos/sienna-brush.webp" };
 
 export type InstagramPost = {
   type: "p" | "reel";
