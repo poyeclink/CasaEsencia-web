@@ -13,14 +13,12 @@ type ProductContent = {
   care?: string[];
 };
 
-// Casa Escencia vende solo por docena: el precio del catálogo es el de la
-// docena completa y el unitario se deriva para mostrarlo como referencia.
-export const UNITS_PER_DOZEN = 12;
+// Pedido mínimo por producto. El precio sale en la cotización, no en el sitio.
+export const MIN_ORDER_UNITS = 25;
 
 export type Product = {
   slug: string;
   sku: string;
-  dozenPrice: number;
   image: string;
   hoverImage: string;
   gallery: string[];
@@ -31,7 +29,6 @@ export const products: Product[] = [
   {
     slug: "aura-hair-brush",
     sku: "AHB01",
-    dozenPrice: 347.88,
     image: "/images/aura-box.webp",
     hoverImage: "/images/aura-hair.webp",
     gallery: ["/images/aura-box.webp", "/images/aura-hair.webp", "/images/aura-campaign.webp"],
@@ -77,7 +74,6 @@ export const products: Product[] = [
   {
     slug: "ease-hair-comb",
     sku: "AHB02",
-    dozenPrice: 227.88,
     image: "/images/ease-box.webp",
     hoverImage: "/images/ease-closeup.webp",
     gallery: ["/images/ease-box.webp", "/images/ease-closeup.webp", "/images/ease-studio.webp"],
@@ -124,8 +120,4 @@ export const products: Product[] = [
 
 export function getProduct(slug: string) {
   return products.find((product) => product.slug === slug);
-}
-
-export function unitPrice(product: Product) {
-  return product.dozenPrice / UNITS_PER_DOZEN;
 }

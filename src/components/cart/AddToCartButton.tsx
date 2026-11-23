@@ -3,15 +3,15 @@
 import { useState } from "react";
 import { Check, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { getProduct, UNITS_PER_DOZEN } from "@/content/products";
-import { cn, formatCurrency } from "@/lib/utils";
+import { MIN_ORDER_UNITS } from "@/content/products";
+import { cn } from "@/lib/utils";
 import { useCart } from "./CartProvider";
 
 type Props = {
   slug: string;
   label: string;
   addedLabel: string;
-  // summary: plantilla con {units} y {total} que se muestra bajo el selector.
+  // summary: plantilla con {units} que se muestra bajo el selector.
   withQuantity?: { label: string; increase: string; decrease: string; summary: string };
   className?: string;
   variant?: "primary" | "outline";
@@ -26,9 +26,8 @@ export function AddToCartButton({
   variant,
 }: Props) {
   const { add } = useCart();
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(MIN_ORDER_UNITS);
   const [added, setAdded] = useState(false);
-  const dozenPrice = getProduct(slug)?.dozenPrice ?? 0;
 
   function handleAdd() {
     add(slug, quantity);
@@ -47,18 +46,21 @@ export function AddToCartButton({
           >
             <button
               type="button"
-              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              onClick={() => setQuantity((q) => Math.max(MIN_ORDER_UNITS, q - MIN_ORDER_UNITS))}
               aria-label={withQuantity.decrease}
               className="flex size-11 items-center justify-center rounded-full hover:bg-secondary"
             >
               <Minus className="size-4" />
             </button>
-            <span className="w-8 text-center text-sm font-semibold tabular-nums" aria-live="polite">
+            <span
+              className="w-12 text-center text-sm font-semibold tabular-nums"
+              aria-live="polite"
+            >
               {quantity}
             </span>
             <button
               type="button"
-              onClick={() => setQuantity((q) => q + 1)}
+              onClick={() => setQuantity((q) => q + MIN_ORDER_UNITS)}
               aria-label={withQuantity.increase}
               className="flex size-11 items-center justify-center rounded-full hover:bg-secondary"
             >
@@ -79,10 +81,7 @@ export function AddToCartButton({
       </div>
       {withQuantity && (
         <p className="text-sm text-muted-foreground tabular-nums">
-          {withQuantity.label}: {quantity} ·{" "}
-          {withQuantity.summary
-            .replace("{units}", String(quantity * UNITS_PER_DOZEN))
-            .replace("{total}", formatCurrency(dozenPrice * quantity))}
+          {withQuantity.summary.replace("{units}", String(quantity))}
         </p>
       )}
     </div>

@@ -4,10 +4,9 @@ import { notFound } from "next/navigation";
 import { Check, Truck } from "lucide-react";
 import { hasLocale, locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
-import { getProduct, products, UNITS_PER_DOZEN, unitPrice } from "@/content/products";
+import { getProduct, MIN_ORDER_UNITS, products } from "@/content/products";
 import { site } from "@/content/site";
 import { pageMetadata } from "@/lib/seo";
-import { formatCurrency } from "@/lib/utils";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -47,14 +46,6 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/wholesa
     sku: product.sku,
     brand: { "@type": "Brand", name: site.name },
     image: product.gallery.map((src) => `${site.url}${src}`),
-    offers: {
-      "@type": "Offer",
-      price: product.dozenPrice,
-      priceCurrency: "USD",
-      eligibleQuantity: { "@type": "QuantitativeValue", value: UNITS_PER_DOZEN, unitCode: "C62" },
-      availability: "https://schema.org/InStock",
-      url: `${site.url}/${lang}/wholesale/${slug}`,
-    },
   };
 
   return (
@@ -114,16 +105,12 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/wholesa
               <p className="eyebrow">{content.tagline}</p>
               <h1 className="display text-5xl sm:text-6xl">{content.name}</h1>
               <div className="flex flex-wrap items-center gap-4">
-                <p className="text-2xl tabular-nums">
-                  {formatCurrency(product.dozenPrice)}{" "}
-                  <span className="text-base text-muted-foreground">{t.perDozen}</span>
-                </p>
                 <span className="rounded-full bg-forest/10 px-3 py-1 text-xs font-semibold text-forest">
                   {t.inStock}
                 </span>
               </div>
               <p className="text-sm text-muted-foreground tabular-nums">
-                {t.unitReference.replace("{price}", formatCurrency(unitPrice(product)))}
+                {t.minOrder.replace("{min}", String(MIN_ORDER_UNITS))}
               </p>
             </div>
             <p className="leading-relaxed text-muted-foreground">{content.summary}</p>

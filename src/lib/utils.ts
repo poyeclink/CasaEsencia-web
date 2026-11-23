@@ -5,14 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-const currencyFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-});
-
-export function formatCurrency(amount: number) {
-  return currencyFormatter.format(amount);
-}
 
 export function formatDate(date: Date | string, locale = "es") {
   return new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(
@@ -29,10 +21,6 @@ export function formatDateTime(date: Date | string, locale = "es") {
     timeStyle: "short",
     timeZone: STORE_TIME_ZONE,
   }).format(new Date(date));
-}
-
-export function formatDozens(count: number, t: { dozen: string; dozens: string }) {
-  return count === 1 ? t.dozen : t.dozens.replace("{count}", String(count));
 }
 
 export function orderCode(number: number) {
