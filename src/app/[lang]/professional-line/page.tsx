@@ -176,7 +176,6 @@ export default async function ProfessionalPage({ params }: PageProps<"/[lang]/pr
             <div className="rounded-xl bg-card p-6 shadow-[0_30px_60px_-40px_rgb(21_50_71/0.5)] sm:p-8">
               <LeadForm
                 source="profesional"
-                locale={lang}
                 t={{ ...dict.leadForm, success: dict.store.formSuccess }}
                 withCity
                 defaultProducts={["Siena Professional Brush"]}

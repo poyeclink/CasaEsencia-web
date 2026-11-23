@@ -4,6 +4,8 @@ import { products } from "@/content/products";
 import { posts } from "@/content/posts";
 import { site } from "@/content/site";
 
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
     "",

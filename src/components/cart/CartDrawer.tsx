@@ -6,6 +6,7 @@ import { Minus, Plus, Truck } from "lucide-react";
 import { Sheet } from "@/components/ui/Sheet";
 import { buttonVariants } from "@/components/ui/Button";
 import { getProduct, UNITS_PER_DOZEN } from "@/content/products";
+import { whatsappLink } from "@/content/site";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries/es";
 import { cn, formatCurrency, formatDozens } from "@/lib/utils";
@@ -18,6 +19,15 @@ export function CartDrawer({ locale, t }: { locale: Locale; t: Dictionary["cart"
     const product = getProduct(item.slug);
     return product ? [{ ...item, product, name: product.content[locale].name }] : [];
   });
+
+  const quoteText = [
+    t.quoteIntro,
+    ...lines.map(
+      (line) =>
+        `• ${line.name}: ${t.units.replace("{units}", String(line.quantity * UNITS_PER_DOZEN))}`,
+    ),
+    t.quoteClose,
+  ].join("\n");
 
   return (
     <Sheet
@@ -44,13 +54,15 @@ export function CartDrawer({ locale, t }: { locale: Locale; t: Dictionary["cart"
                 <dd className="tabular-nums">{formatCurrency(total)}</dd>
               </div>
             </dl>
-            <Link
-              href={`/${locale}/checkout`}
+            <a
+              href={whatsappLink(quoteText)}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setOpen(false)}
               className={cn(buttonVariants({ size: "lg" }), "w-full")}
             >
               {t.checkout}
-            </Link>
+            </a>
             <p className="text-center text-xs text-muted-foreground">{t.checkoutNote}</p>
           </div>
         )

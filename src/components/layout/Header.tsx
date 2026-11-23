@@ -8,8 +8,6 @@ import { LanguageSwitcher } from "./LanguageSwitcher";
 import { MobileMenu } from "./MobileMenu";
 import { navItems } from "./nav";
 
-// Server Component sin leer la sesión a propósito: así todas las páginas de
-// marketing siguen siendo estáticas. El estado de la cuenta vive en /my-account.
 export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const items = navItems(dict.nav);
 

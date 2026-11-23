@@ -233,7 +233,9 @@ const en: Dictionary = {
     dozen: "1 dozen",
     units: "{units} units",
     dozenNotice: "Sold exclusively by the dozen · 12 units per dozen",
-    checkout: "Checkout",
+    checkout: "Send quote request on WhatsApp",
+    quoteIntro: "Hi, Casa Escencia! I would like a wholesale quote:",
+    quoteClose: "Business and city:",
     checkoutNote:
       "Free shipping across El Salvador. Payment is arranged when we confirm your order.",
     continue: "Continue shopping",
@@ -437,6 +439,7 @@ const en: Dictionary = {
     minRead: "min read",
   },
   leadForm: {
+    waIntro: "Hi, Casa Escencia! I would like wholesale information:",
     name: "Full name",
     businessName: "Business name",
     whatsapp: "WhatsApp",

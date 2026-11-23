@@ -237,7 +237,9 @@ const es = {
     dozen: "1 docena",
     units: "{units} unidades",
     dozenNotice: "Venta exclusiva por docena · 12 unidades por docena",
-    checkout: "Finalizar pedido",
+    checkout: "Enviar cotización por WhatsApp",
+    quoteIntro: "¡Hola, Casa Escencia! Quiero una cotización al por mayor:",
+    quoteClose: "Negocio y ciudad:",
     checkoutNote: "Envío gratis a todo El Salvador. El pago se coordina al confirmar tu pedido.",
     continue: "Seguir comprando",
   },
@@ -441,6 +443,7 @@ const es = {
     minRead: "min de lectura",
   },
   leadForm: {
+    waIntro: "¡Hola, Casa Escencia! Quiero información para comprar al por mayor:",
     name: "Nombre completo",
     businessName: "Nombre del negocio",
     whatsapp: "WhatsApp",
