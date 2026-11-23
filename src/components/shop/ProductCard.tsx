@@ -110,14 +110,7 @@ export function ProductCard({ product, locale, dict, sizes, wholesale = false }:
       image={product.image}
       hoverImage={product.hoverImage}
       sizes={sizes}
-      ideal={
-        wholesale
-          ? {
-              label: dict.store.idealFor,
-              items: dict.store.ideal[product.slug as keyof typeof dict.store.ideal],
-            }
-          : undefined
-      }
+      ideal={wholesale ? { label: dict.store.idealFor, items: content.ideal } : undefined}
       note={wholesale ? dict.store.tierLine : undefined}
       cta={{ label: dict.common.requestQuote, href: `/${locale}#cotizar` }}
       details={wholesale ? { label: dict.store.details, href } : undefined}

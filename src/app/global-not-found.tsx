@@ -7,8 +7,7 @@ export const metadata: Metadata = {
   title: "404 · Casa Escencia",
 };
 
-// Necesario con varios root layouts ([lang] y (admin)): cubre las URLs que no
-// caen en ninguno de los dos.
+// Sin app/layout.tsx raíz (el root layout es [lang]): cubre las URLs que no caen bajo un idioma.
 export default function GlobalNotFound() {
   return (
     <html lang="es" className={`${playfair.variable} ${nunito.variable} antialiased`}>

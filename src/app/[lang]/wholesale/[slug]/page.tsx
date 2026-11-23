@@ -9,7 +9,9 @@ import { site } from "@/content/site";
 import { pageMetadata } from "@/lib/seo";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { ProductCard } from "@/components/shop/ProductCard";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { cn } from "@/lib/utils";
+import { Ornament, SectionHeading } from "@/components/ui/SectionHeading";
+import { VideoTile } from "@/components/sections/VideoTile";
 
 export function generateStaticParams() {
   return locales.flatMap((lang) => products.map((product) => ({ lang, slug: product.slug })));
@@ -36,7 +38,7 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/wholesa
   const dict = await getDictionary(lang);
   const t = dict.product;
   const content = product.content[lang];
-  const related = products.filter((p) => p.slug !== slug);
+  const related = products.filter((p) => p.slug !== slug).slice(0, 3);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -176,16 +178,58 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/wholesa
         </div>
       </div>
 
-      <section className="bg-secondary/60 py-24">
-        <div className="container-page flex flex-col gap-14">
-          <SectionHeading align="center" title={t.relatedTitle} text={t.relatedText} />
-          <div className="mx-auto w-full max-w-md">
-            {related.map((p) => (
-              <ProductCard key={p.slug} product={p} locale={lang} dict={dict} sizes="28rem" />
-            ))}
+      {product.video && (
+        <section className="bg-primary text-primary-foreground">
+          <div className="container-page grid items-center gap-14 py-24 sm:py-28 lg:grid-cols-[0.8fr_1fr] lg:gap-24">
+            <VideoTile
+              video={product.video}
+              label={`${dict.common.watchVideo}: ${content.name}`}
+              closeLabel={dict.nav.close}
+              sizes="20rem"
+              className="mx-auto max-w-xs"
+            />
+            <div className="flex flex-col gap-6">
+              <p className="eyebrow text-gold">{t.videoEyebrow}</p>
+              <h2 className="display text-4xl leading-[1.1] sm:text-5xl">{t.videoTitle}</h2>
+              <Ornament className="justify-start" />
+              <p className="max-w-lg leading-relaxed text-primary-foreground/75">
+                {t.videoText.replace("{name}", content.name)}
+              </p>
+              <ul className="grid gap-3 text-sm sm:grid-cols-2">
+                {content.details.map((detail) => (
+                  <li key={detail} className="flex items-center gap-2">
+                    <Check className="size-4 text-gold" strokeWidth={1.5} /> {detail}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {related.length > 0 && (
+        <section className="bg-secondary/60 py-24">
+          <div className="container-page flex flex-col gap-14">
+            <SectionHeading align="center" title={t.relatedTitle} text={t.relatedText} />
+            <div
+              className={cn(
+                "mx-auto grid w-full gap-16 md:gap-10",
+                related.length === 1 ? "max-w-md" : "max-w-6xl sm:grid-cols-2 lg:grid-cols-3",
+              )}
+            >
+              {related.map((p) => (
+                <ProductCard
+                  key={p.slug}
+                  product={p}
+                  locale={lang}
+                  dict={dict}
+                  sizes={related.length === 1 ? "28rem" : "(min-width: 1024px) 30vw, 50vw"}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </>
   );
 }

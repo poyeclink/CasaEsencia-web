@@ -53,6 +53,7 @@ export function ProSection({
           <div className="rounded-xl bg-background p-6 text-foreground shadow-2xl sm:p-8">
             <LeadForm
               source="profesional"
+              locale={locale}
               t={{ ...dict.leadForm, success: text.success }}
               withMessage={!!copy}
               withCity={!!copy}

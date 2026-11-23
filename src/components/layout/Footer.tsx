@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries/es";
+import { legalPages } from "@/content/legal";
 import { products } from "@/content/products";
 import { site } from "@/content/site";
 import { Logo } from "./Logo";
@@ -93,6 +94,15 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
             © {new Date().getFullYear()} {site.name}. {t.rights}
           </p>
           <p>{t.terms}</p>
+          <ul className="flex gap-4">
+            {legalPages.map((page) => (
+              <li key={page.slug}>
+                <Link href={`/${locale}/${page.slug}`} className="hover:text-primary-foreground">
+                  {page.content[locale].title}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </footer>

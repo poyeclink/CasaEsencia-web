@@ -7,6 +7,7 @@ import { Sheet } from "@/components/ui/Sheet";
 import { buttonVariants } from "@/components/ui/Button";
 import { getProduct, MIN_ORDER_UNITS } from "@/content/products";
 import { whatsappLink } from "@/content/site";
+import { trackLead } from "@/lib/analytics";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries/es";
 import { cn } from "@/lib/utils";
@@ -44,7 +45,10 @@ export function CartDrawer({ locale, t }: { locale: Locale; t: Dictionary["cart"
               href={whatsappLink(quoteText)}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                trackLead("carrito");
+                setOpen(false);
+              }}
               className={cn(buttonVariants({ size: "lg" }), "w-full")}
             >
               {t.checkout}

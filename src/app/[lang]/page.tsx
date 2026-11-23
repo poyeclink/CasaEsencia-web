@@ -98,7 +98,13 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
             title={t.collectionTitle}
             text={t.collectionText}
           />
-          <div className="mx-auto grid w-full max-w-5xl gap-16 md:grid-cols-2 md:gap-12">
+          <div
+            className={
+              products.length > 2
+                ? "mx-auto grid w-full max-w-6xl gap-16 md:grid-cols-2 md:gap-12 lg:grid-cols-3"
+                : "mx-auto grid w-full max-w-5xl gap-16 md:grid-cols-2 md:gap-12"
+            }
+          >
             {products.map((product) => (
               <ProductCard key={product.slug} product={product} locale={lang} dict={dict} />
             ))}

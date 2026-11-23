@@ -1,23 +1,61 @@
 # Casa Escencia: sitio estático exportado desde Next.js (out/ → public_html).
-# Las redirecciones 301 conservan el SEO de las URLs del WordPress anterior.
+# Las redirecciones 301 conservan el SEO de las URLs del WordPress anterior, que tenía
+# el inglés en la raíz (/about/) y el español bajo /es/ (/es/about/).
+
+RewriteEngine On
+
+# Todo por HTTPS y sin www.
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\. [NC]
+RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
 
 RedirectMatch 302 ^/$ /es/
 ErrorDocument 404 /404.html
 
-# Tienda y carrito anteriores → mayoreo (prefijo: captura también /store/<producto>).
-Redirect 301 /cart /es/wholesale/
-Redirect 301 /store /es/wholesale/
-Redirect 301 /producto/aura-hair-brush /es/wholesale/aura-hair-brush/
-Redirect 301 /producto/ease-hair-comb /es/wholesale/ease-hair-comb/
+# Páginas en inglés que vivían en la raíz.
+RedirectMatch 301 ^/(about|contact-us|wholesale|professional-line|blog|terminos-y-condiciones|privacy-policy)/?$ /en/$1/
+
+# Fichas de producto (páginas, tienda y WooCommerce).
+RedirectMatch 301 ^/(?:store/)?(aura-hair-brush|ease-hair-comb)/?$ /en/wholesale/$1/
+RedirectMatch 301 ^/es/(?:store/)?(aura-hair-brush|ease-hair-comb)/?$ /es/wholesale/$1/
+RedirectMatch 301 ^/producto/(aura-hair-brush|ease-hair-comb)/?$ /es/wholesale/$1/
+
+# Tienda, carrito, checkout y cuenta de WooCommerce → mayoreo.
+RedirectMatch 301 ^/(?:store|cart|checkout-2|my-account|categoria-producto)(?:/.*)?$ /en/wholesale/
+RedirectMatch 301 ^/es/(?:store|cart|checkout-2|my-account|categoria-producto)(?:/.*)?$ /es/wholesale/
 
 # Artículos que vivían en la raíz → /blog/<slug>.
-Redirect 301 /aura-hair-brush-el-inicio-de-un-ritual /es/blog/aura-hair-brush-el-inicio-de-un-ritual/
-Redirect 301 /how-choosing-the-right-brush-can-change-your-hairs-health /es/blog/how-choosing-the-right-brush-can-change-your-hairs-health/
-Redirect 301 /mindful-brushing-a-micro-ritual /es/blog/mindful-brushing-a-micro-ritual/
-Redirect 301 /the-art-of-turning-daily-care-into-a-beauty-ritual /es/blog/the-art-of-turning-daily-care-into-a-beauty-ritual/
+RedirectMatch 301 ^/(aura-hair-brush-el-inicio-de-un-ritual|mindful-brushing-a-micro-ritual|how-choosing-the-right-brush-can-change-your-hairs-health|the-art-of-turning-daily-care-into-a-beauty-ritual)/?$ /en/blog/$1/
+RedirectMatch 301 ^/es/(aura-hair-brush-el-inicio-de-un-ritual|mindful-brushing-a-micro-ritual|how-choosing-the-right-brush-can-change-your-hairs-health|the-art-of-turning-daily-care-into-a-beauty-ritual)/?$ /es/blog/$1/
 
-# El service worker nunca se cachea: así cada despliegue lo actualiza.
-<Files "sw.js">
-  Header set Cache-Control "no-cache, no-store, must-revalidate"
-  Header set Service-Worker-Allowed "/"
-</Files>
+# Categorías, etiquetas, autor y feed del blog → índice del blog.
+RedirectMatch 301 ^/(?:category|tag|author)/.*$ /en/blog/
+RedirectMatch 301 ^/es/(?:category|tag|author)/.*$ /es/blog/
+RedirectMatch 301 ^/feed/?$ /en/blog/
+RedirectMatch 301 ^/es/feed/?$ /es/blog/
+
+# Plantillas internas de Elementor que Yoast publicaba en el sitemap.
+RedirectMatch 301 ^/(?:es/)?elementor-hf/.*$ /es/
+
+# Sitemaps de Yoast → sitemap único.
+RedirectMatch 301 ^/(?:sitemap_index|[a-z_-]+-sitemap)\.xml$ /sitemap.xml
+
+Options -Indexes
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  # Nadie puede incrustar el sitio en un iframe (clickjacking).
+  Header always set Content-Security-Policy "frame-ancestors 'self'"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  # Sin includeSubDomains: los subdominios de prueba pueden no tener SSL propio.
+  Header always set Strict-Transport-Security "max-age=31536000"
+
+  # El service worker nunca se cachea: así cada despliegue lo actualiza.
+  <Files "sw.js">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Service-Worker-Allowed "/"
+  </Files>
+</IfModule>

@@ -9,6 +9,8 @@ import { Ornament } from "@/components/ui/SectionHeading";
 import { LeadForm } from "@/components/leads/LeadForm";
 import { BlogSection } from "@/components/sections/BlogSection";
 import { ReelTile } from "@/components/sections/ReelTile";
+import { VideoTile } from "@/components/sections/VideoTile";
+import { sienaVideo } from "@/content/site";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/professional-line">) {
   const { lang } = await params;
@@ -80,6 +82,27 @@ export default async function ProfessionalPage({ params }: PageProps<"/[lang]/pr
             </ul>
           </div>
         ))}
+      </section>
+
+      <section className="bg-secondary/60">
+        <div className="container-page grid items-center gap-14 py-24 sm:py-28 lg:grid-cols-[0.8fr_1fr] lg:gap-24">
+          <VideoTile
+            video={sienaVideo}
+            label={`${dict.common.watchVideo}: ${t.title}`}
+            closeLabel={dict.nav.close}
+            sizes="20rem"
+            className="mx-auto max-w-xs"
+          />
+          <div className="flex flex-col gap-6">
+            <p className="eyebrow">{t.videoEyebrow}</p>
+            <h2 className="display text-4xl leading-[1.1] sm:text-5xl">{t.videoTitle}</h2>
+            <Ornament className="justify-start" />
+            <p className="max-w-lg leading-relaxed text-muted-foreground">{t.videoText}</p>
+            <a href="#cotizar" className={`${buttonVariants({ size: "lg" })} mt-2 w-fit`}>
+              {dict.store.cta}
+            </a>
+          </div>
+        </div>
       </section>
 
       <section className="overflow-hidden bg-forest text-forest-foreground">
@@ -176,9 +199,9 @@ export default async function ProfessionalPage({ params }: PageProps<"/[lang]/pr
             <div className="rounded-xl bg-card p-6 shadow-[0_30px_60px_-40px_rgb(21_50_71/0.5)] sm:p-8">
               <LeadForm
                 source="profesional"
+                locale={lang}
                 t={{ ...dict.leadForm, success: dict.store.formSuccess }}
                 withCity
-                defaultProducts={["Siena Professional Brush"]}
               />
             </div>
           </div>

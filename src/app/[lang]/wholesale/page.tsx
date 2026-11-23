@@ -4,12 +4,14 @@ import { notFound } from "next/navigation";
 import { hasLocale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { products } from "@/content/products";
+import { sienaVideo } from "@/content/site";
 import { pageMetadata } from "@/lib/seo";
 import { buttonVariants } from "@/components/ui/Button";
 import { Ornament, SectionHeading } from "@/components/ui/SectionHeading";
 import { CollectionCard, ProductCard } from "@/components/shop/ProductCard";
 import { ProSection } from "@/components/sections/ProSection";
 import { DeliverySection } from "@/components/sections/DeliverySection";
+import { VideoTile } from "@/components/sections/VideoTile";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/wholesale">) {
   const { lang } = await params;
@@ -27,6 +29,26 @@ export default async function WholesalePage({ params }: PageProps<"/[lang]/whole
   if (!hasLocale(lang)) notFound();
   const dict = await getDictionary(lang);
   const t = dict.store;
+  const videos = [
+    ...products.flatMap((product) =>
+      product.video
+        ? [
+            {
+              video: product.video,
+              name: product.content[lang].name,
+              tagline: product.content[lang].tagline,
+              href: `/${lang}/wholesale/${product.slug}`,
+            },
+          ]
+        : [],
+    ),
+    {
+      video: sienaVideo,
+      name: t.siena.name,
+      tagline: t.siena.tagline,
+      href: `/${lang}/professional-line`,
+    },
+  ];
 
   return (
     <>
@@ -75,6 +97,41 @@ export default async function WholesalePage({ params }: PageProps<"/[lang]/whole
             cta={{ label: dict.common.requestQuote, href: "#cotizar" }}
             details={{ label: t.details, href: `/${lang}/professional-line` }}
           />
+        </div>
+      </section>
+
+      <section className="bg-primary text-primary-foreground">
+        <div className="container-page flex flex-col gap-14 py-24 sm:py-28">
+          <SectionHeading
+            align="center"
+            tone="dark"
+            eyebrow={t.videosEyebrow}
+            title={t.videosTitle}
+            text={t.videosText}
+          />
+          <ul className="flex flex-wrap justify-center gap-14">
+            {videos.map((item) => (
+              <li
+                key={item.video.youtube}
+                className="flex w-full max-w-xs flex-col items-center gap-4 text-center"
+              >
+                <VideoTile
+                  video={item.video}
+                  label={`${dict.common.watchVideo}: ${item.name}`}
+                  closeLabel={dict.nav.close}
+                  sizes="20rem"
+                />
+                <p className="eyebrow mt-2 text-gold">{item.tagline}</p>
+                <p className="display text-3xl">{item.name}</p>
+                <Link
+                  href={item.href}
+                  className="text-xs font-semibold tracking-[0.18em] text-gold uppercase underline-offset-8 hover:underline"
+                >
+                  {t.details} →
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

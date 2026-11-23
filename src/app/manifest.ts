@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Casa Escencia",
     short_name: "Casa Escencia",
     description:
-      "Cepillos y peines para el cuidado del cabello. Venta por docena con envío a todo El Salvador.",
+      "Cepillos y peines para el cuidado del cabello. Venta al por mayor para salones y tiendas, con envío a todo El Salvador.",
     lang: "es",
     start_url: "/es/",
     scope: "/",

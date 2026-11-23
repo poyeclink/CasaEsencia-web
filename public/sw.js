@@ -1,6 +1,6 @@
-// Service worker de Casa Escencia. Solo cachea recursos públicos e inmutables;
-// las páginas HTML nunca se guardan (cuenta, checkout y panel son privados), y
-// sin conexión las navegaciones caen a /offline.html.
+// Service worker de Casa Escencia. Solo cachea recursos estáticos e inmutables;
+// las páginas HTML siempre se piden a la red para que cada despliegue se vea al instante.
+// Sin conexión, las navegaciones caen a /offline.html.
 const VERSION = "v1";
 const STATIC_CACHE = `ce-static-${VERSION}`;
 const OFFLINE_URL = "/offline.html";

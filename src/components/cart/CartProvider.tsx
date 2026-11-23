@@ -17,7 +17,6 @@ type CartContextValue = {
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
-// Clave nueva: los carritos guardados antes estaban en docenas y no se pueden leer como unidades.
 const STORAGE_KEY = "ce-cart-units";
 
 // El carrito vive en el navegador hasta enviar la cotización por WhatsApp.

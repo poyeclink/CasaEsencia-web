@@ -14,6 +14,8 @@ const es = {
     professional: "Profesional",
     contact: "Contacto",
     requestInfo: "Solicita información",
+    watchVideo: "Ver video",
+    lastUpdated: "Última actualización",
     account: "Mi cuenta",
     cart: "Carrito",
     menu: "Menú",
@@ -23,6 +25,8 @@ const es = {
   },
   common: {
     requestInfo: "Solicita información",
+    watchVideo: "Ver video",
+    lastUpdated: "Última actualización",
     whatsappChat: "Escríbenos por WhatsApp",
     exploreLine: "Conoce la línea profesional",
     shopNow: "Compra ahora",
@@ -131,10 +135,10 @@ const es = {
       tagline: "Secados más rápidos y controlados",
       ideal: ["Secado con secadora", "Volumen y forma", "Peinados"],
     },
-    ideal: {
-      "aura-hair-brush": ["Servicios de terminado", "Exhibidores", "Sets de regalo"],
-      "ease-hair-comb": ["Área de lavado", "Desenredado", "Venta diaria"],
-    },
+    videosEyebrow: "En acción",
+    videosTitle: "Míralos en acción",
+    videosText:
+      "Videos cortos de cada herramienta: cómo se usa y el resultado que verán tus clientas.",
     howEyebrow: "Venta al por mayor",
     howTitle: "Cómo funciona el mayoreo",
     howText:
@@ -219,6 +223,10 @@ const es = {
     quantity: "Unidades",
     minOrder: "Pedido mínimo {min} unidades · Precio por volumen en tu cotización",
     lineTotal: "{units} unidades en tu pedido",
+    videoEyebrow: "En acción",
+    videoTitle: "Míralo en acción",
+    videoText:
+      "Así trabaja {name} en una rutina real. Es el resultado que tus clientas notarán desde el primer uso.",
   },
   cart: {
     title: "Tu pedido",
@@ -337,6 +345,10 @@ const es = {
     ],
     partnersCta: "Quiero ser salón aliado",
     watchReel: "Ver el reel en Matices by Ruth",
+    videoEyebrow: "En acción",
+    videoTitle: "Secado con Siena",
+    videoText:
+      "Mira cómo el barril térmico ventilado deja que el aire pase mientras secas: forma y volumen en menos tiempo, con un acabado que dura.",
     formTitle: "¿Quieres Siena en tu salón?",
     formText:
       "Cuéntanos de tu salón y te enviamos precios por volumen y disponibilidad en 24 horas hábiles.",
@@ -374,7 +386,8 @@ const es = {
     name: "Nombre completo",
     businessName: "Nombre del negocio",
     whatsapp: "WhatsApp",
-    email: "Correo electrónico",
+    email: "Correo electrónico (opcional)",
+    emailPending: "pendiente, se solicitará para la factura electrónica",
     businessType: "Tipo de negocio",
     businessPlaceholder: "Selecciona el tipo de negocio",
     businessTypes: {
@@ -384,11 +397,12 @@ const es = {
       vendedor: "Vendedor independiente",
     },
     products: "Productos de interés",
-    productOptions: ["Aura Hair Brush", "Ease Hair Comb", "Siena Professional Brush"],
+    productsNote: "Mínimo {min} unidades por producto. Ajusta las cantidades aquí o en tu pedido.",
+    needProducts: "Agrega al menos un producto con su cantidad.",
+    increase: "Aumentar unidades",
+    decrease: "Disminuir unidades",
+    unitsLabel: "{units} unidades",
     city: "Ciudad (opcional)",
-    quantity: "Cantidad estimada",
-    quantityPlaceholder: "Selecciona una cantidad",
-    quantityOptions: ["25", "50", "100", "200", "500+", "Aún no sé"],
     message: "Mensaje",
     submit: "Solicita información",
     note: "Te respondemos en 24 horas hábiles con precios y disponibilidad.",

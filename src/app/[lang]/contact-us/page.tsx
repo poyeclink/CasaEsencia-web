@@ -83,6 +83,7 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
           <p className="mt-3 mb-8 text-muted-foreground">{t.formText}</p>
           <LeadForm
             source="contacto"
+            locale={lang}
             t={{ ...dict.leadForm, success: dict.store.formSuccess }}
             withCity
           />

@@ -1,67 +1,54 @@
 # casa-escencia-web — Convenciones del proyecto
 
-Sitio de Casa Escencia (cepillos y peines, El Salvador), migrado desde WordPress (casaescencia.com). Nace de `ecommerce-template`: misma estructura de capas, auth y design system.
-Stack: Next.js 16 (App Router) + TypeScript + React 19 + Tailwind 4 + Prisma 7 + Supabase PostgreSQL + Vercel + pnpm.
+Sitio de Casa Escencia (cepillos y peines, El Salvador), migrado desde WordPress (casaescencia.com). Venta **solo al por mayor por cotización**.
+Stack: Next.js 16 (App Router) + TypeScript + React 19 + Tailwind 4 + pnpm, publicado como **exportación estática** (`output: "export"`) en Hostinger (plan Premium, sin Node.js).
 
 ## Estado actual
 
-- **Base de datos**: `User` (del template), `Lead` (formularios de contacto y línea profesional, con `status` gestionado desde el panel) y `Order`/`OrderItem` (pedidos de la tienda).
-- **Catálogo y blog estáticos** en `src/content/` (`products.ts`, `posts.ts`, `site.ts`), bilingües vía `Localized<T>`. Se migrarán a DB cuando haga falta editarlos sin deploy.
-- **Venta solo por docena** (decisión del cliente, sep-2026): `products.ts` guarda `dozenPrice` (precio de la docena completa, hoy = unitario anterior × 12) y el unitario solo se deriva para mostrarlo. En carrito y pedidos `quantity`/`dozens` siempre son docenas. Envío gratis en todos los pedidos (con la regla anterior de gratis desde $30 cualquier docena ya calificaba), por eso no hay costo de envío en el modelo.
-- **Flujo de compra** (misma metodología de capas que `ecommerce-template`): carrito en `localStorage` (`CartProvider`, clave `ce-cart-dozens`) → `/[lang]/checkout` exige sesión de cliente (si no, `/login?next=...`; `nextPath()` en `auth-actions.ts` solo acepta rutas del mismo idioma) → `placeOrderAction` valida y `order-service.createOrder` recalcula precios desde el catálogo (nunca confía en el navegador) y congela nombre/precio/contacto en el pedido → `/[lang]/my-account/orders/[id]?placed=1` limpia el carrito y ofrece WhatsApp con el número `CE-0001`. Sin cobro en línea: el pago se coordina al confirmar.
-- **Estados de pedido**: `pendiente → confirmado → enviado → entregado` o `cancelado`, cambiados a mano por el admin. Los cancelados no cuentan en ventas ni en "total comprado".
-- **Instagram**: las fotos de los posts se copiaron a `public/images/instagram/` (las URLs del CDN de Instagram caducan). La galería (`InstagramFeed`) enlaza cada foto al post; los reels usan una fachada (`ReelTile`) que monta el embed oficial solo al abrirlo. Para cambiar posts: guardar la imagen y editar `instagramPosts` en `src/content/site.ts`.
-- **Header**: logo a la izquierda y navegación a la derecha (estilo tradicional, a pedido del cliente; el sitio original lo tenía centrado).
+- **Sitio 100 % estático**: `pnpm build` genera `out/` (HTML, CSS, JS), que se sube a `public_html`. Sin base de datos, sin auth, sin Server Actions, sin proxy/middleware, sin optimizador de imágenes (`images.unoptimized`; las imágenes ya están en AVIF/WebP).
+- La versión con backend (Prisma + Supabase, auth, panel admin, pedidos) vive en la rama local `full-stack`. Es el upsell futuro: requiere hosting con Node.js.
+- **Catálogo, blog y páginas legales** en `src/content/` (`products.ts`, `posts.ts`, `legal.ts`, `site.ts`), bilingües vía `Localized<T>`. Sin CMS: un artículo nuevo es una entrada más en `posts.ts` (bloques `p`, `h2`, `list`, `steps`, `quote`, renderizados por `RichText`) y su imagen en `public/images/`; la plantilla, el índice, el sitemap y los artículos relacionados lo toman solos.
+- Términos y privacidad (`[lang]/[legal]`) usan los slugs del WordPress (`/terminos-y-condiciones`, `/privacy-policy`). Texto provisional pendiente de aprobación de la clienta.
+- **Sin precios en el sitio**: el precio sale en la cotización. Pedido mínimo `MIN_ORDER_UNITS = 25` por producto, en escalas de 25 (`products.ts`).
+- **Pedido = carrito en `localStorage`** (`CartProvider`, clave `ce-cart-units`, cantidades en unidades). Lo comparten la ficha de producto (`AddToCartButton`), el panel del carrito (`CartDrawer`) y los formularios (`LeadForm`): agregar un producto en un lado se ve en los demás.
+- **Formularios sin backend**: `LeadForm` valida con HTML nativo y abre `wa.me/<número>` con la solicitud armada (datos del negocio + productos y unidades). El correo es opcional: si falta, el mensaje indica que la clienta lo pedirá para la factura electrónica. Número de WhatsApp en `site.ts`.
+- No se guarda ningún lead ni pedido en el sitio: el registro vive en el WhatsApp de la clienta.
+- **GA4 opcional**: solo se carga si `NEXT_PUBLIC_GA_ID` existe en build (`src/lib/analytics.ts` + `next/script` en el layout). `trackLead()` manda `generate_lead` al enviar un formulario o la cotización del carrito.
+- **Productos**: plantilla única en `wholesale/[slug]`; para agregar uno, ver `docs/productos.md`. Videos: Shorts de YouTube (`video` en el producto, `sienaVideo` en `site.ts`) con portada local en `public/images/videos/` y la misma fachada `ReelTile`, que monta `youtube-nocookie.com` solo al abrir.
+- **Instagram**: fotos copiadas a `public/images/instagram/` (las URLs del CDN caducan). Los reels usan una fachada (`ReelTile`) que monta el embed oficial solo al abrirlo.
+- **Header**: logo a la izquierda, navegación a la derecha, un solo CTA "Solicita información". Sin carrito ni cuenta en el header.
 
-## Panel admin (`/admin`)
+## Hosting y seguridad (`public/.htaccess`, se copia a `out/`)
 
-- Solo español; etiquetas de estado reutilizan `es.orders.statuses` (`src/components/admin/labels.ts`) para que cliente y admin nombren igual cada estado.
-- Secciones: Resumen (KPIs del mes, ventas 6 meses, docenas por producto, recientes), Pedidos (filtro por estado, búsqueda por n.º/cliente/teléfono, detalle con cambio de estado + nota interna), Clientes (compras agregadas, ficha con historial) y Leads (filtro por estado/origen, estado editable en línea).
-- Meses y fechas del panel en hora de El Salvador (`STORE_TIME_ZONE`, UTC-6 fijo); piezas de UI compartidas en `src/components/admin/ui.tsx`.
-- Cada Server Action del panel llama `requireAdmin()` aunque el proxy ya proteja `/admin`: las actions son endpoints públicos.
+- HTTPS forzado y sin `www`; `/` → `/es/` (302). El WordPress tenía el inglés en la raíz (`/about/`) y el español bajo `/es/`: los 301 con `RedirectMatch` anclados cubren las 85 URLs de sus sitemaps (ver `docs/publicacion.md`). Usar siempre `RedirectMatch ^...$`: `Redirect` compara por prefijo y `/aura-hair-brush` capturaría también `/aura-hair-brush-el-inicio-de-un-ritual`.
+- Encabezados: `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `frame-ancestors 'self'` + `X-Frame-Options`, HSTS sin `includeSubDomains`. `Options -Indexes`. `sw.js` sin caché.
+- No hay CSP completa a propósito: los reels cargan scripts e iframes de `instagram.com` y GA4 carga `googletagmanager.com`. Si se agrega, probarla primero en el subdominio de prueba.
+- Las rutas de metadatos (`manifest.ts`, `robots.ts`, `sitemap.ts`) llevan `export const dynamic = "force-static"`: la exportación lo exige.
+- `NEXT_PUBLIC_SITE_URL` y `NEXT_PUBLIC_GA_ID` se fijan en build (ver `.env.example`).
 
 ## Internacionalización
 
 - Patrón nativo de la guía de Next (`node_modules/next/dist/docs/01-app/02-guides/internationalization.md`), sin librerías: rutas bajo `src/app/[lang]`, diccionarios TS en `src/i18n/dictionaries/` (`en.ts` tipado como `Dictionary` de `es.ts`, así TS avisa si falta una clave).
-- Idiomas: `es` (default) y `en`. `src/proxy.ts` redirige las URLs sin prefijo según `Accept-Language` y hace 308 de URLs antiguas del WordPress (`/producto/*`, artículos en la raíz).
-- Slugs de rutas en inglés (`/store`, `/about`, `/professional-line`, `/contact-us`, `/blog/<slug>`) a propósito: son los mismos del sitio original, para conservar SEO.
-- Los Client Components reciben la porción del diccionario por props. Server Actions devuelven **claves** de error (no textos) y el formulario las traduce.
+- Idiomas: `es` (default) y `en`. Sin proxy: la raíz redirige a `/es/` desde `.htaccess` (no hay negociación por `Accept-Language`).
+- Slugs de rutas en inglés (`/wholesale`, `/about`, `/professional-line`, `/contact-us`, `/blog/<slug>`) a propósito: son los del sitio original, para conservar SEO.
+- Los Client Components reciben la porción del diccionario por props.
 - Cada página define su canonical/hreflang con `pageMetadata()` (`src/lib/seo.ts`); no ponerlo en el layout o todas heredan el de la home.
-- Dos root layouts: `app/[lang]/layout.tsx` (sitio) y `app/(admin)/layout.tsx` (panel, solo español). Por eso `experimental.globalNotFound` + `app/global-not-found.tsx`.
-
-## Rendimiento
-
-- El `Header` no lee la sesión para que todas las páginas públicas sean SSG; el estado de la cuenta vive en `/[lang]/my-account` (dinámica).
-- Imágenes locales en `public/images/` servidas con `next/image` (AVIF/WebP). Solo el hero de cada página usa `preload`.
+- `experimental.globalNotFound` + `app/global-not-found.tsx` para el 404 global.
 
 ## Branding
 
 - Paleta sacada del sitio y empaque original: azul marino `#153247` (logo), crema, dorado del monograma y verde bosque (Ease Comb / sellos). Tokens en `src/app/globals.css`.
 - `accent` es el dorado oscuro (texto pequeño AA sobre crema); `gold` es el dorado claro solo para fondos oscuros.
-- Tipografías del original: Playfair Display (titulares, `font-serif`) + Nunito Sans (texto).
+- Tipografías del original: Playfair Display (titulares, `font-serif`) + Nunito Sans (texto), servidas por `next/font` (sin Google Fonts en runtime).
 - Motivo visual: marcos en arco (`rounded-t-full`), ornamento dorado (`Ornament`), eyebrows en mayúsculas espaciadas (`.eyebrow`).
 
 ## Cómo trabajar en este repo
 
-- Código mínimo y sin sobreingeniería (enfoque `ponytail`): nada de abstracciones especulativas, capas sin propósito, ni flags de compatibilidad hacia atrás en un proyecto sin usuarios todavía.
-- Exploración amplia del código → delegar a un subagente en vez de hacerlo inline.
-- Antes de cerrar un ticket de código: correr `code-review` (o `simplify` si es solo limpieza) sobre el diff.
+- Código mínimo y sin sobreingeniería (enfoque `ponytail`): nada de abstracciones especulativas ni capas sin propósito.
+- Antes de cerrar un cambio: `pnpm exec tsc --noEmit`, `pnpm lint` y `pnpm build` (el build es la prueba de que todo sigue siendo exportable).
 - Sin comentarios explicativos de qué hace el código; solo comentarios que expliquen un porqué no obvio.
 - Server Components por defecto; Client Components solo donde hay interactividad real.
-- Lógica de negocio pura y testeable vive en `src/server/services/`, no en Server Actions ni componentes.
-
-## Base de datos (Prisma 7 + Supabase)
-
-- Prisma pinneado a `7.10.0` a propósito, igual que el template.
-- Config del CLI en `prisma7.config.ts` (nombre que esta versión de Prisma detecta automáticamente). Ahí vive `DIRECT_URL` porque el CLI (migrate/db push/studio) la necesita; la app en runtime (`src/lib/prisma.ts`) usa `DATABASE_URL` (pooled) directamente en el adapter, sin pasar por este config.
-- `DIRECT_URL` debe usar el Session pooler de Supabase (`aws-0-<region>.pooler.supabase.com:5432`), no el host de conexión directa real (`db.<project-ref>.supabase.co:5432` — solo resuelve por IPv6, da `ETIMEDOUT` en redes sin salida IPv6).
-- Cliente generado en `src/generated/prisma` (gitignored), se importa como `@/generated/prisma/client`. Correr `pnpm db:generate` después de cualquier cambio en `prisma/schema.prisma`.
-- Requiere driver adapters (`@prisma/adapter-pg` + `pg`), no hay motor de query engine binario.
-
-## Autenticación
-
-- Sesión propia vía JWT (`jose`, edge-safe) en cookie httpOnly (`src/lib/session.ts`), sin tabla de sesiones en DB. Contraseñas con `bcryptjs` (`src/lib/password.ts`).
-- Cliente y administrador comparten el modelo `User` (`role`) pero flujos y rutas separados por defecto (`/[lang]/login`+`/[lang]/registro` vs. `/acceso-admin`).
+- Nada que necesite servidor en runtime: ni Server Actions, ni `cookies()`/`headers()`, ni rutas API, ni `redirect()` dinámico. Romperían `output: "export"`.
 
 ## Design system
 

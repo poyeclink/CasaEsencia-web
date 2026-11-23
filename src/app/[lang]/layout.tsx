@@ -11,6 +11,8 @@ import { Footer } from "@/components/layout/Footer";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { PwaProvider } from "@/components/pwa/PwaProvider";
+import Script from "next/script";
+import { GA_ID } from "@/lib/analytics";
 
 export const viewport: Viewport = {
   themeColor: "#153247",
@@ -65,6 +67,17 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
           <CartDrawer locale={lang} t={dict.cart} />
           <PwaProvider t={dict.pwa} />
         </CartProvider>
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4" strategy="afterInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag("js",new Date());gtag("config","${GA_ID}");`}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );
