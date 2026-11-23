@@ -5,8 +5,23 @@ import type { Dictionary } from "@/i18n/dictionaries/es";
 import { LeadForm } from "@/components/leads/LeadForm";
 import { Ornament } from "@/components/ui/SectionHeading";
 
-export function ProSection({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+export function ProSection({
+  locale,
+  dict,
+  copy,
+}: {
+  locale: Locale;
+  dict: Dictionary;
+  // La página de mayoreo usa su propio texto y el formulario completo.
+  copy?: { eyebrow: string; title: string; text: string; success: string };
+}) {
   const t = dict.home;
+  const text = copy ?? {
+    eyebrow: t.proEyebrow,
+    title: t.proTitle,
+    text: t.proText,
+    success: dict.leadForm.success,
+  };
 
   return (
     <section id="cotizar" className="relative overflow-hidden bg-primary text-primary-foreground">
@@ -24,19 +39,25 @@ export function ProSection({ locale, dict }: { locale: Locale; dict: Dictionary 
         </div>
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-5">
-            <p className="eyebrow text-gold">{t.proEyebrow}</p>
-            <h2 className="display text-4xl leading-[1.1] sm:text-5xl">{t.proTitle}</h2>
+            <p className="eyebrow text-gold">{text.eyebrow}</p>
+            <h2 className="display text-4xl leading-[1.1] sm:text-5xl">{text.title}</h2>
             <Ornament className="justify-start" />
-            <p className="max-w-lg leading-relaxed text-primary-foreground/75">{t.proText}</p>
+            <p className="max-w-lg leading-relaxed text-primary-foreground/75">{text.text}</p>
             <Link
               href={`/${locale}/professional-line`}
               className="w-fit text-xs font-semibold tracking-[0.18em] text-gold uppercase underline-offset-8 hover:underline"
             >
-              {dict.common.learnMore} →
+              {dict.common.exploreLine} →
             </Link>
           </div>
           <div className="rounded-xl bg-background p-6 text-foreground shadow-2xl sm:p-8">
-            <LeadForm source="profesional" locale={locale} t={dict.leadForm} withMessage={false} />
+            <LeadForm
+              source="profesional"
+              locale={locale}
+              t={{ ...dict.leadForm, success: text.success }}
+              withMessage={!!copy}
+              withCity={!!copy}
+            />
           </div>
         </div>
       </div>

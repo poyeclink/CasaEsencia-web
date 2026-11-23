@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/profession
   if (!hasLocale(lang)) return {};
   const dict = await getDictionary(lang);
   return pageMetadata(lang, "/professional-line", {
-    title: dict.professional.title,
-    description: dict.professional.subtitle,
+    title: { absolute: dict.professional.metaTitle },
+    description: dict.professional.metaDescription,
     image: "/images/siena-features.webp",
   });
 }
@@ -40,8 +40,9 @@ export default async function ProfessionalPage({ params }: PageProps<"/[lang]/pr
               href="#cotizar"
               className={`${buttonVariants({ variant: "light", size: "lg" })} mt-2 w-fit`}
             >
-              {dict.common.requestQuote}
+              {dict.store.cta}
             </a>
+            <p className="text-sm text-primary-foreground/70">{dict.home.heroNote}</p>
           </div>
           <div className="relative mx-auto aspect-square w-full max-w-lg overflow-hidden rounded-xl">
             <Image
@@ -58,7 +59,7 @@ export default async function ProfessionalPage({ params }: PageProps<"/[lang]/pr
 
       <section className="container-page grid gap-10 py-24 sm:py-28 md:grid-cols-2">
         {[
-          { title: t.idealTitle, items: t.ideal },
+          { title: t.idealTitle, items: t.ideal.map((text) => ({ title: "", text })) },
           { title: t.featuresTitle, items: t.features },
         ].map((group) => (
           <div key={group.title} className="rounded-xl border border-border bg-card p-8 sm:p-10">
@@ -66,11 +67,14 @@ export default async function ProfessionalPage({ params }: PageProps<"/[lang]/pr
             <Ornament className="mt-4 mb-8 justify-start" />
             <ul className="flex flex-col gap-4">
               {group.items.map((item) => (
-                <li key={item} className="flex items-center gap-4">
+                <li key={item.text} className="flex items-center gap-4">
                   <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary text-accent">
                     <Check className="size-4" strokeWidth={1.5} />
                   </span>
-                  {item}
+                  <span>
+                    {item.title && <strong className="font-semibold">{item.title}: </strong>}
+                    {item.text}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -170,7 +174,13 @@ export default async function ProfessionalPage({ params }: PageProps<"/[lang]/pr
               <p className="leading-relaxed text-muted-foreground">{t.formText}</p>
             </div>
             <div className="rounded-xl bg-card p-6 shadow-[0_30px_60px_-40px_rgb(21_50_71/0.5)] sm:p-8">
-              <LeadForm source="profesional" locale={lang} t={dict.leadForm} />
+              <LeadForm
+                source="profesional"
+                locale={lang}
+                t={{ ...dict.leadForm, success: dict.store.formSuccess }}
+                withCity
+                defaultProducts={["Siena Professional Brush"]}
+              />
             </div>
           </div>
         </div>

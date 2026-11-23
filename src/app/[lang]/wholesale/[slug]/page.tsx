@@ -18,19 +18,19 @@ export function generateStaticParams() {
 
 export const dynamicParams = false;
 
-export async function generateMetadata({ params }: PageProps<"/[lang]/store/[slug]">) {
+export async function generateMetadata({ params }: PageProps<"/[lang]/wholesale/[slug]">) {
   const { lang, slug } = await params;
   const product = getProduct(slug);
   if (!hasLocale(lang) || !product) return {};
   const content = product.content[lang];
-  return pageMetadata(lang, `/store/${slug}`, {
+  return pageMetadata(lang, `/wholesale/${slug}`, {
     title: content.name,
     description: content.summary,
     image: product.gallery[0],
   });
 }
 
-export default async function ProductPage({ params }: PageProps<"/[lang]/store/[slug]">) {
+export default async function ProductPage({ params }: PageProps<"/[lang]/wholesale/[slug]">) {
   const { lang, slug } = await params;
   const product = getProduct(slug);
   if (!hasLocale(lang) || !product) notFound();
@@ -53,7 +53,7 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/store/[
       priceCurrency: "USD",
       eligibleQuantity: { "@type": "QuantitativeValue", value: UNITS_PER_DOZEN, unitCode: "C62" },
       availability: "https://schema.org/InStock",
-      url: `${site.url}/${lang}/store/${slug}`,
+      url: `${site.url}/${lang}/wholesale/${slug}`,
     },
   };
 
@@ -73,7 +73,7 @@ export default async function ProductPage({ params }: PageProps<"/[lang]/store/[
             </li>
             <li aria-hidden="true">/</li>
             <li>
-              <Link href={`/${lang}/store`} className="hover:text-foreground">
+              <Link href={`/${lang}/wholesale`} className="hover:text-foreground">
                 {t.breadcrumbStore}
               </Link>
             </li>

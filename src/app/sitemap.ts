@@ -7,12 +7,12 @@ import { site } from "@/content/site";
 export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
     "",
-    "/store",
+    "/wholesale",
     "/about",
     "/professional-line",
     "/blog",
     "/contact-us",
-    ...products.map((product) => `/store/${product.slug}`),
+    ...products.map((product) => `/wholesale/${product.slug}`),
     ...posts.map((post) => `/blog/${post.slug}`),
   ];
 

@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE_NAME, verifySessionToken } from "@/lib/session";
 import { defaultLocale, hasLocale, type Locale } from "@/i18n/config";
 import { posts } from "@/content/posts";
+import { products } from "@/content/products";
 
 // Negociación mínima de Accept-Language: con solo dos idiomas no hace falta
 // una librería de matching.
@@ -17,9 +18,11 @@ function preferredLocale(request: NextRequest): Locale {
 // URLs del WordPress anterior que cambiaron de forma, para no perder SEO
 // (los artículos vivían en la raíz, ahora bajo /blog).
 const legacyPaths: Record<string, string> = {
-  "/producto/aura-hair-brush": "/store/aura-hair-brush",
-  "/producto/ease-hair-comb": "/store/ease-hair-comb",
-  "/cart": "/store",
+  "/producto/aura-hair-brush": "/wholesale/aura-hair-brush",
+  "/producto/ease-hair-comb": "/wholesale/ease-hair-comb",
+  "/cart": "/wholesale",
+  "/store": "/wholesale",
+  ...Object.fromEntries(products.map((p) => [`/store/${p.slug}`, `/wholesale/${p.slug}`])),
   ...Object.fromEntries(posts.map((post) => [`/${post.slug}`, `/blog/${post.slug}`])),
 };
 

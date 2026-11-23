@@ -126,6 +126,9 @@ export default async function AdminLeadsPage({ searchParams }: PageProps<"/admin
                     >
                       {lead.email}
                     </a>
+                    {lead.whatsapp && (
+                      <p className="text-xs text-muted-foreground">{lead.whatsapp}</p>
+                    )}
                   </td>
                   <td className={tdClass}>
                     <span
@@ -143,9 +146,15 @@ export default async function AdminLeadsPage({ searchParams }: PageProps<"/admin
                     </span>
                   </td>
                   <td className={tdClass}>
+                    {lead.businessName && <p className="font-medium">{lead.businessName}</p>}
                     {lead.businessType
                       ? (businessTypeLabels[lead.businessType] ?? lead.businessType)
                       : "—"}
+                    {(lead.products || lead.quantity) && (
+                      <p className="text-xs text-muted-foreground">
+                        {[lead.products, lead.quantity].filter(Boolean).join(" · ")}
+                      </p>
+                    )}
                   </td>
                   <td className={`${tdClass} max-w-xs whitespace-pre-line text-muted-foreground`}>
                     {lead.message ?? "—"}

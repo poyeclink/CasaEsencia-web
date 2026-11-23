@@ -37,10 +37,10 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
           fill
           preload
           sizes="100vw"
-          className="-z-10 object-cover object-[70%_center]"
+          className="-z-10 object-cover object-[25%_70%]"
         />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary via-primary/55 to-primary/10 lg:bg-gradient-to-r lg:from-primary/90 lg:via-primary/45 lg:to-transparent" />
-        <div className="container-page flex flex-col gap-7 pt-40 pb-16 lg:py-24">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary via-primary/55 to-primary/10 lg:bg-gradient-to-l lg:from-primary/90 lg:via-primary/45 lg:to-transparent" />
+        <div className="container-page flex flex-col gap-7 pt-40 pb-16 lg:py-24 lg:pl-[55%]">
           <p className="eyebrow animate-fade-up text-gold">{t.heroEyebrow}</p>
           <h1 className="display max-w-2xl animate-fade-up text-5xl leading-[1.02] [animation-delay:120ms] sm:text-6xl lg:text-7xl">
             {t.heroTitle}
@@ -49,19 +49,19 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
             {t.heroText}
           </p>
           <div className="flex animate-fade-up flex-wrap gap-4 pt-2 [animation-delay:360ms]">
-            <Link
-              href={`/${lang}/store`}
-              className={buttonVariants({ variant: "light", size: "lg" })}
-            >
-              {dict.common.shopNow}
+            <Link href="#cotizar" className={buttonVariants({ variant: "light", size: "lg" })}>
+              {dict.common.requestInfo}
             </Link>
             <Link
-              href={`/${lang}/about`}
+              href="#coleccion"
               className={buttonVariants({ variant: "outlineLight", size: "lg" })}
             >
               {t.heroSecondary}
             </Link>
           </div>
+          <p className="animate-fade-up text-sm text-primary-foreground/70 [animation-delay:480ms]">
+            {t.heroNote}
+          </p>
         </div>
       </section>
 
@@ -90,7 +90,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
         </ul>
       </section>
 
-      <section className="bg-secondary/60 py-24 sm:py-32">
+      <section id="coleccion" className="bg-secondary/60 py-24 sm:py-32">
         <div className="container-page flex flex-col gap-16">
           <SectionHeading
             align="center"
@@ -140,11 +140,8 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
               </li>
             ))}
           </ul>
-          <Link
-            href={`/${lang}/store/aura-hair-brush`}
-            className={`${buttonVariants({ size: "lg" })} w-fit`}
-          >
-            {dict.common.getYours}
+          <Link href="#cotizar" className={`${buttonVariants({ size: "lg" })} w-fit`}>
+            {dict.common.requestInfo}
           </Link>
         </div>
       </section>
@@ -186,7 +183,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
       </section>
 
       <ProSection locale={lang} dict={dict} />
-      <DeliverySection locale={lang} t={t} />
+      <DeliverySection t={t} cta={dict.common.requestInfo} />
       <InstagramFeed dict={dict} />
       <BlogSection locale={lang} dict={dict} />
       <ClosingCta locale={lang} dict={dict} />

@@ -43,6 +43,11 @@ model Lead {
   name         String
   email        String
   businessType String?
+  businessName String?
+  whatsapp     String?
+  city         String?
+  products     String?
+  quantity     String?
   message      String?
   locale       String
   status       LeadStatus @default(nuevo)

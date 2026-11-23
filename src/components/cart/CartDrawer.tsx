@@ -60,7 +60,7 @@ export function CartDrawer({ locale, t }: { locale: Locale; t: Dictionary["cart"
         <div className="flex h-full flex-col items-center justify-center gap-6 text-center">
           <p className="display text-xl text-muted-foreground">{t.empty}</p>
           <Link
-            href={`/${locale}/store`}
+            href={`/${locale}/wholesale`}
             onClick={() => setOpen(false)}
             className={buttonVariants({ variant: "outline" })}
           >

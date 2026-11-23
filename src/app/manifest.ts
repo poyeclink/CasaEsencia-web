@@ -24,7 +24,7 @@ export default function manifest(): MetadataRoute.Manifest {
     shortcuts: [
       {
         name: "Tienda",
-        url: "/es/store",
+        url: "/es/wholesale",
         icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }],
       },
       {

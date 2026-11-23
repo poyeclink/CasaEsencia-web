@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { UserRound } from "lucide-react";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries/es";
-import { CartButton } from "@/components/cart/CartButton";
+import { buttonVariants } from "@/components/ui/Button";
 import { Logo } from "./Logo";
 import { NavLinks } from "./NavLinks";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -36,13 +35,11 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
             className="mr-1 hidden sm:flex"
           />
           <Link
-            href={`/${locale}/my-account`}
-            aria-label={dict.nav.account}
-            className="hidden size-10 items-center justify-center rounded-full transition-colors hover:bg-secondary sm:inline-flex"
+            href={`/${locale}#cotizar`}
+            className={`${buttonVariants({ size: "sm" })} hidden sm:inline-flex`}
           >
-            <UserRound className="size-5" strokeWidth={1.5} />
+            {dict.nav.requestInfo}
           </Link>
-          <CartButton label={dict.nav.cart} />
           <MobileMenu locale={locale} items={items} nav={dict.nav} />
         </div>
       </div>

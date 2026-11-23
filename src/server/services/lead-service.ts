@@ -16,12 +16,17 @@ type CreateLeadInput = {
   name: string;
   email: string;
   businessType?: BusinessType;
+  businessName?: string;
+  whatsapp?: string;
+  city?: string;
+  products?: string[];
+  quantity?: string;
   message?: string;
   locale: string;
 };
 
 export function createLead(input: CreateLeadInput) {
-  return prisma.lead.create({ data: input });
+  return prisma.lead.create({ data: { ...input, products: input.products?.join(", ") } });
 }
 
 type ListLeadsFilter = {
@@ -41,6 +46,8 @@ export async function listLeads({ source, status, q, page, pageSize }: ListLeads
       OR: [
         { name: { contains: search, mode: "insensitive" } },
         { email: { contains: search, mode: "insensitive" } },
+        { businessName: { contains: search, mode: "insensitive" } },
+        { whatsapp: { contains: search } },
         { message: { contains: search, mode: "insensitive" } },
       ],
     }),

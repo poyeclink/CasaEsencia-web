@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { MapPin, PackageCheck, Truck } from "lucide-react";
-import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries/es";
 import { buttonVariants } from "@/components/ui/Button";
 
 const icons = [MapPin, Truck, PackageCheck];
 
-export function DeliverySection({ locale, t }: { locale: Locale; t: Dictionary["home"] }) {
+export function DeliverySection({ t, cta }: { t: Dictionary["home"]; cta: string }) {
   return (
     <section className="border-y border-border bg-background">
       <div className="container-page grid gap-12 py-20 lg:grid-cols-[1fr_2fr] lg:items-center">
@@ -14,8 +13,8 @@ export function DeliverySection({ locale, t }: { locale: Locale; t: Dictionary["
           <p className="eyebrow">{t.deliveryEyebrow}</p>
           <h2 className="display text-4xl">{t.deliveryTitle}</h2>
           <p className="text-muted-foreground">{t.deliveryText}</p>
-          <Link href={`/${locale}/store`} className={`${buttonVariants()} mt-2 w-fit`}>
-            {t.deliveryCta}
+          <Link href="#cotizar" className={`${buttonVariants()} mt-2 w-fit`}>
+            {cta}
           </Link>
         </div>
         <ul className="grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-3">

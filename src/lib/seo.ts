@@ -6,7 +6,11 @@ import { defaultLocale, locales, type Locale } from "@/i18n/config";
 export function pageMetadata(
   lang: Locale,
   path: string,
-  { title, description, image }: { title?: string; description?: string; image?: string },
+  {
+    title,
+    description,
+    image,
+  }: { title?: NonNullable<Metadata["title"]>; description?: string; image?: string },
 ): Metadata {
   return {
     title,

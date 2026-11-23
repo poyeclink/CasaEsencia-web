@@ -47,7 +47,7 @@ export default async function AccountPage({ params }: PageProps<"/[lang]/my-acco
           <div className="flex flex-col items-center gap-5 rounded-xl border border-dashed border-border bg-card px-6 py-16 text-center">
             <Package className="size-8 text-accent" strokeWidth={1.25} />
             <p className="text-muted-foreground">{t.empty}</p>
-            <Link href={`/${lang}/store`} className={buttonVariants()}>
+            <Link href={`/${lang}/wholesale`} className={buttonVariants()}>
               {t.shopCta}
             </Link>
           </div>

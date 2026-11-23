@@ -53,7 +53,7 @@ export function CheckoutForm({ locale, t, cart, email, defaults }: Props) {
     return (
       <div className="flex flex-col items-center gap-6 rounded-xl border border-border bg-card px-6 py-20 text-center">
         <p className="display text-2xl text-muted-foreground">{t.empty}</p>
-        <Link href={`/${locale}/store`} className={buttonVariants()}>
+        <Link href={`/${locale}/wholesale`} className={buttonVariants()}>
           {t.backToStore}
         </Link>
       </div>

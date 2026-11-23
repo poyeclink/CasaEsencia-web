@@ -34,7 +34,10 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
           <h1 className="display text-5xl leading-[1.05] sm:text-7xl">{t.title}</h1>
           <Ornament className="justify-start" />
           <p className="max-w-lg text-lg leading-relaxed text-muted-foreground">{t.text}</p>
-          <Link href={`/${lang}/store`} className={`${buttonVariants({ size: "lg" })} mt-2 w-fit`}>
+          <Link
+            href={`/${lang}/wholesale`}
+            className={`${buttonVariants({ size: "lg" })} mt-2 w-fit`}
+          >
             {dict.common.viewProducts}
           </Link>
         </div>
@@ -48,6 +51,48 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
             sizes="(min-width: 1024px) 28rem, 90vw"
             className="object-contain"
           />
+        </div>
+      </section>
+
+      <section className="overflow-hidden">
+        <div className="container-page grid items-center gap-16 pb-24 sm:pb-32 lg:grid-cols-[1fr_1.1fr] lg:gap-24">
+          <div className="relative mx-auto w-full max-w-md pb-12 pl-8 sm:pl-12 lg:mx-0">
+            <div
+              aria-hidden="true"
+              className="absolute top-6 right-[-1rem] bottom-12 left-16 rounded-t-full border border-gold sm:left-20"
+            />
+            <div className="relative aspect-[4/5] overflow-hidden rounded-t-full bg-secondary shadow-[0_30px_60px_-35px_rgb(21_50_71/0.55)]">
+              <Image
+                src="/images/founder-story.webp"
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 28rem, 90vw"
+                className="object-cover object-[58%_30%]"
+              />
+            </div>
+            <div className="absolute bottom-0 left-0 size-36 overflow-hidden rounded-full border-8 border-background bg-secondary shadow-xl sm:size-44">
+              <Image
+                src="/images/founder-detail.webp"
+                alt=""
+                fill
+                sizes="12rem"
+                className="object-cover"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <SectionHeading eyebrow={t.story.eyebrow} title={t.story.title} />
+            <Ornament className="justify-start" />
+            {t.story.paragraphs.map((paragraph) => (
+              <p key={paragraph} className="max-w-xl text-lg leading-relaxed text-muted-foreground">
+                {paragraph}
+              </p>
+            ))}
+            <p className="display max-w-xl border-l-2 border-gold pl-5 text-2xl italic">
+              {t.story.closing}
+            </p>
+          </div>
         </div>
       </section>
 
@@ -103,12 +148,12 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
       </section>
 
       <section className="container-page grid items-center gap-14 py-24 sm:py-32 lg:grid-cols-2 lg:gap-24">
-        <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
+        <div className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-xl">
           <Image
             src="/images/display-stand.webp"
             alt=""
             fill
-            sizes="(min-width: 1024px) 45vw, 100vw"
+            sizes="(min-width: 1024px) 28rem, 90vw"
             className="object-cover"
           />
         </div>
@@ -118,6 +163,7 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
             “{t.purpose}”
           </blockquote>
           <Ornament className="justify-start" />
+          <p className="text-lg leading-relaxed text-muted-foreground">{t.purposeText}</p>
         </div>
       </section>
 

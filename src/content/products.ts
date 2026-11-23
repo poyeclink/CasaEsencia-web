@@ -38,7 +38,7 @@ export const products: Product[] = [
     content: {
       es: {
         name: "Aura Hair Brush",
-        tagline: "Aporta volumen y brillo",
+        tagline: "Volumen y brillo",
         summary:
           "Cepillo de madera hecho a mano con cerdas naturales que aporta volumen, brillo y suavidad al cabello. Ideal para todo tipo de cabello, desenreda con suavidad y convierte tu rutina diaria en un momento de mimo y elegancia.",
         description: [
@@ -56,7 +56,7 @@ export const products: Product[] = [
       },
       en: {
         name: "Aura Hair Brush",
-        tagline: "Brings volume and shine",
+        tagline: "Volume and shine",
         summary:
           "A handcrafted wooden brush with natural bristles that adds volume, shine and softness to hair. Ideal for all hair types, it gently detangles and transforms your daily routine into a moment of pampering and elegance.",
         description: [
@@ -84,7 +84,7 @@ export const products: Product[] = [
     content: {
       es: {
         name: "Ease Hair Comb",
-        tagline: "Desenredado sin esfuerzo y acabado suave",
+        tagline: "Desenreda sin esfuerzo",
         summary:
           "Peine ligero con cerdas flexibles que desenreda sin jalar, reduce la rotura y aporta brillo natural. Ideal para todo tipo de cabello, transforma tu rutina diaria en un cuidado suave y cómodo.",
         description: [
@@ -102,7 +102,7 @@ export const products: Product[] = [
       },
       en: {
         name: "Ease Hair Comb",
-        tagline: "Effortless detangling & smooth finish",
+        tagline: "Effortless detangling",
         summary:
           "A lightweight comb with flexible bristles that detangles without pulling, reduces breakage and adds natural shine. Ideal for all hair types, it turns your daily routine into gentle, comfortable care.",
         description: [

@@ -18,12 +18,22 @@ type Props = {
   locale: Locale;
   t: Dictionary["leadForm"];
   withMessage?: boolean;
+  withCity?: boolean;
+  defaultProducts?: string[];
   className?: string;
 };
 
 const initialState: LeadActionState = {};
 
-export function LeadForm({ source, locale, t, withMessage = true, className }: Props) {
+export function LeadForm({
+  source,
+  locale,
+  t,
+  withMessage = true,
+  withCity = false,
+  defaultProducts = [],
+  className,
+}: Props) {
   const [state, formAction] = useActionState(submitLeadAction.bind(null, source), initialState);
   const id = (field: string) => `${source}-${field}`;
 
@@ -48,6 +58,21 @@ export function LeadForm({ source, locale, t, withMessage = true, className }: P
       <div className="grid gap-5 sm:grid-cols-2">
         <TextField id={id("name")} label={t.name} name="name" autoComplete="name" required />
         <TextField
+          id={id("businessName")}
+          label={t.businessName}
+          name="businessName"
+          autoComplete="organization"
+          required
+        />
+        <TextField
+          id={id("whatsapp")}
+          label={t.whatsapp}
+          name="whatsapp"
+          type="tel"
+          autoComplete="tel"
+          required
+        />
+        <TextField
           id={id("email")}
           label={t.email}
           name="email"
@@ -56,7 +81,7 @@ export function LeadForm({ source, locale, t, withMessage = true, className }: P
           required
         />
       </div>
-      {source === "profesional" && (
+      <>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor={id("businessType")}>{t.businessType}</Label>
           <Select id={id("businessType")} name="businessType" required defaultValue="">
@@ -70,6 +95,41 @@ export function LeadForm({ source, locale, t, withMessage = true, className }: P
             ))}
           </Select>
         </div>
+        <fieldset className="flex flex-col gap-2">
+          <legend className="mb-1.5 text-xs font-semibold tracking-wide text-foreground/80">
+            {t.products}
+          </legend>
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
+            {t.productOptions.map((option) => (
+              <label key={option} className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  name="products"
+                  value={option}
+                  defaultChecked={defaultProducts.includes(option)}
+                  className="size-4 accent-accent"
+                />
+                {option}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor={id("quantity")}>{t.quantity}</Label>
+          <Select id={id("quantity")} name="quantity" required defaultValue="">
+            <option value="" disabled>
+              {t.quantityPlaceholder}
+            </option>
+            {t.quantityOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </Select>
+        </div>
+      </>
+      {withCity && (
+        <TextField id={id("city")} label={t.city} name="city" autoComplete="address-level2" />
       )}
       {withMessage && (
         <div className="flex flex-col gap-1.5">
@@ -79,6 +139,7 @@ export function LeadForm({ source, locale, t, withMessage = true, className }: P
       )}
       <FormError message={state.error && t.errors[state.error]} />
       <SubmitButton size="lg">{t.submit}</SubmitButton>
+      <p className="text-center text-xs text-muted-foreground">{t.note}</p>
     </form>
   );
 }
